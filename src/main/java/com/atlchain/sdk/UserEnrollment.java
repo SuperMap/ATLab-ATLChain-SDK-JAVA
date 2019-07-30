@@ -5,7 +5,7 @@ import org.hyperledger.fabric.sdk.Enrollment;
 import java.io.Serializable;
 import java.security.PrivateKey;
 
-public class UserEnrollment implements Enrollment, Serializable {
+class UserEnrollment implements Enrollment, Serializable {
     private static final long serialVersionUID = 3035666776718760411L;
     private PrivateKey key;
     private String cert;

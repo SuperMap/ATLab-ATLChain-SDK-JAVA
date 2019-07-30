@@ -6,7 +6,7 @@ import org.hyperledger.fabric.sdk.User;
 import java.io.Serializable;
 import java.util.Set;
 
-public class UserContext implements User, Serializable {
+class UserContext implements User, Serializable {
 
     private static final long serialVersionUID = -4122807593203522310L;
     private String name;
