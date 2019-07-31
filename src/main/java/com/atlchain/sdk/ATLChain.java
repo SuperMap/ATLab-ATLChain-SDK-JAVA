@@ -4,6 +4,8 @@ package com.atlchain.sdk;
 import org.hyperledger.fabric.sdk.*;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
@@ -59,7 +61,7 @@ public class ATLChain {
      * @param args  参数
      * @return  查询结果
      */
-    public String queryByte(String channelName, String chaincodeName, String functionName, byte[][] args) {
+    public byte[][] queryByte(String channelName, String chaincodeName, String functionName, byte[][] args) {
         Channel channel = Utils.getChannel(hfClient, channelName, peerName, peerURL, ordererName, ordererURL);
         TransactionProposalRequest queryByChaincodeRequest = Utils.getTransactionProposalRequest(hfClient, chaincodeName, functionName, args);
         Collection<ProposalResponse> proposalResponses = null;
@@ -70,12 +72,14 @@ public class ATLChain {
             e.printStackTrace();
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
+        // 将结果构造为 byte[][]
+        ArrayList<byte[]> byteArrayList = new ArrayList<>();
         for (ProposalResponse res : proposalResponses) {
-            stringBuilder.append(res.getProposalResponse().getResponse().getPayload().toStringUtf8());
+            byteArrayList.add(res.getProposalResponse().getResponse().getPayload().toByteArray());
         }
+        byte[][] bytes = byteArrayList.toArray(new byte[1][byteArrayList.size()]);
 
-        return stringBuilder.toString();
+        return bytes;
     }
 
     /**

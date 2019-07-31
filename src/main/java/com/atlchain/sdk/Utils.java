@@ -12,6 +12,7 @@ import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 
 class Utils {
+
     static UserContext getUserContext(File keyFile, File certFile, String mspId, String userName) {
         UserContext userContext = new UserContext();
         userContext.setMspId(mspId);

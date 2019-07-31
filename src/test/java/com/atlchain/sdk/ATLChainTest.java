@@ -2,11 +2,10 @@ package com.atlchain.sdk;
 
 import org.junit.Assert;
 import org.junit.Test;
+//import org.locationtech.jts.geom.Geometry;
+//import org.locationtech.jts.io.WKBReader;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class ATLChainTest {
     File certFile = new File(this.getClass().getResource("/certs/user/cert.pem").getPath());
@@ -55,39 +54,45 @@ public class ATLChainTest {
         }
     }
 
-    @Test
-    public void testByteInvoke() {
-        try {
-            byte[] bytes = "ByteContent".getBytes();
-            byte[] byteKey =  "bytekey".getBytes();
-
-            String result = atlChain.invokeByte(
-                    "atlchannel",
-                    "bincc",
-                    "PutByteArray",
-                    new byte[][]{byteKey, bytes}
-            );
-            System.out.println(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void testByteQuery() {
-        try {
-            byte[] byteKey =  "bytekey".getBytes();
-
-            String result = atlChain.queryByte(
-                    "atlchannel",
-                    "bincc",
-                    "GetByteArray",
-                    new byte[][]{byteKey}
-            );
-            System.out.println(result);
-            Assert.assertNotEquals("", result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    public void testByteInvoke() {
+//        try {
+//            byte[] bytes = "ByteContent".getBytes();
+//            byte[] byteKey =  "bytekey".getBytes();
+//
+//            String result = atlChain.invokeByte(
+//                    "atlchannel",
+//                    "bincc",
+//                    "PutByteArray",
+//                    new byte[][]{byteKey, bytes}
+//            );
+//            System.out.println(result);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Test
+//    public void testByteQuery() {
+//        try {
+//            byte[] byteKey =  "Line".getBytes();
+//
+//            byte[][] result = atlChain.queryByte(
+//                    "atlchannel",
+//                    "bincc",
+//                    "GetByteArray",
+//                    new byte[][]{byteKey}
+//            );
+//            System.out.println(result.toString());
+//            System.out.println(result.length);
+//
+//            WKBReader wkbReader = new WKBReader();
+//            Geometry geometry = wkbReader.read(result[0]);
+//            System.out.println(geometry.toString());
+//
+//            Assert.assertNotEquals("", result);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
