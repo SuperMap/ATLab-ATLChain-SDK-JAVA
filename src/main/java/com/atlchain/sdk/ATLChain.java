@@ -7,6 +7,7 @@ import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -18,25 +19,26 @@ public class ATLChain {
     private String ordererName;
     private String ordererURL;
     private HFClient hfClient;
+    private Channel channel;
 
-    public ATLChain(File certFile, File keyFile, String peerName, String peerURL, String mspId, String userName, String ordererName, String ordererURL) {
+    // TODO 使用配置文件设置参数
+    public ATLChain(File certFile, File keyFile, String peerName, String peerURL, String mspId, String userName, String ordererName, String ordererURL, String channelName) {
         this.peerName = peerName;
         this.peerURL = peerURL;
         this.ordererName = ordererName;
         this.ordererURL = ordererURL;
         this.hfClient = Utils.getHFClient(keyFile, certFile, mspId, userName);
+        this.channel = Utils.getChannel(hfClient, channelName, peerName, peerURL, ordererName, ordererURL);
     }
 
     /**
      * 查询
-     * @param channelName   通道名称
      * @param chaincodeName 链码名称
      * @param functionName  方法名称
      * @param args  参数
      * @return  查询结果
      */
-    public String query(String channelName, String chaincodeName, String functionName, String[] args) {
-        Channel channel = Utils.getChannel(hfClient, channelName, peerName, peerURL, ordererName, ordererURL);
+    public String query( String chaincodeName, String functionName, String[] args) {
         TransactionProposalRequest queryByChaincodeRequest = Utils.getTransactionProposalRequest(hfClient, chaincodeName, functionName, args);
         Collection<ProposalResponse> proposalResponses = null;
         try {
@@ -44,6 +46,10 @@ public class ATLChain {
             proposalResponses = channel.sendTransactionProposal(queryByChaincodeRequest);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        if (proposalResponses == null) {
+            return "No Response";
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -55,14 +61,12 @@ public class ATLChain {
 
     /**
      * 查询键为 byte[] 格式的值
-     * @param channelName   通道名称
      * @param chaincodeName 链码名称
      * @param functionName  方法名称
      * @param args  参数
      * @return  查询结果
      */
-    public byte[][] queryByte(String channelName, String chaincodeName, String functionName, byte[][] args) {
-        Channel channel = Utils.getChannel(hfClient, channelName, peerName, peerURL, ordererName, ordererURL);
+    public byte[][] queryByte(String chaincodeName, String functionName, byte[][] args) {
         TransactionProposalRequest queryByChaincodeRequest = Utils.getTransactionProposalRequest(hfClient, chaincodeName, functionName, args);
         Collection<ProposalResponse> proposalResponses = null;
         try {
@@ -70,6 +74,10 @@ public class ATLChain {
             proposalResponses = channel.sendTransactionProposal(queryByChaincodeRequest);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        if (proposalResponses == null) {
+            return new byte[][]{"No Response".getBytes()};
         }
 
         // 将结果构造为 byte[][]
@@ -84,14 +92,12 @@ public class ATLChain {
 
     /**
      * 执行链码
-     * @param channelName   通道名称
      * @param chaincodeName 链码名称
      * @param functionName  方法名称
      * @param args  参数
      * @return  执行结果
      */
-    public String invoke(String channelName, String chaincodeName, String functionName, String[] args) {
-        Channel channel = Utils.getChannel(hfClient, channelName, peerName, peerURL, ordererName, ordererURL);
+    public String invoke(String chaincodeName, String functionName, String[] args) {
         Collection<ProposalResponse> proposalResponses = null;
         TransactionProposalRequest transactionProposalRequest = Utils.getTransactionProposalRequest(hfClient, chaincodeName, functionName, args);
         try {
@@ -102,6 +108,10 @@ public class ATLChain {
             CompletableFuture<BlockEvent.TransactionEvent> completableFuture = channel.sendTransaction(proposalResponses);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        if (proposalResponses == null) {
+            return "No Response";
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -113,14 +123,12 @@ public class ATLChain {
 
     /**
      * 执行链码，参数为 byte[] 格式
-     * @param channelName   通道名称
      * @param chaincodeName 链码名称
      * @param functionName  方法名称
      * @param args  参数
      * @return  执行结果
      */
-    public String invokeByte(String channelName, String chaincodeName, String functionName, byte[][] args) {
-        Channel channel = Utils.getChannel(hfClient, channelName, peerName, peerURL, ordererName, ordererURL);
+    public String invokeByte(String chaincodeName, String functionName, byte[][] args) {
         Collection<ProposalResponse> proposalResponses = null;
         TransactionProposalRequest transactionProposalRequest = Utils.getTransactionProposalRequest(hfClient, chaincodeName, functionName, args);
         try {
@@ -133,6 +141,10 @@ public class ATLChain {
             e.printStackTrace();
         }
 
+        if (proposalResponses == null) {
+            return "No Response";
+        }
+
         StringBuilder stringBuilder = new StringBuilder();
         for (ProposalResponse res : proposalResponses) {
             stringBuilder.append(res.getMessage());
@@ -140,4 +152,8 @@ public class ATLChain {
         return stringBuilder.toString();
     }
 
+    // TODO 获取通道所有链码
+    public List<String> getChaincodeList() {
+        return null;
+    }
 }
