@@ -2,9 +2,15 @@ package com.atlchain.sdk;
 
 
 import org.hyperledger.fabric.sdk.*;
+import org.hyperledger.fabric.sdk.exception.CryptoException;
+import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
+import org.hyperledger.fabric.sdk.exception.NetworkConfigurationException;
+import org.hyperledger.fabric.sdk.security.CryptoSuite;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -21,6 +27,9 @@ public class ATLChain {
     private HFClient hfClient;
     private Channel channel;
 
+    private File certFile = new File("/home/cy/Documents/ATL/SuperMap/ATLab-ATLChain-SDK-JAVA/src/main/resources/certs/user/cert.pem");
+    private File keyFile = new File("/home/cy/Documents/ATL/SuperMap/ATLab-ATLChain-SDK-JAVA/src/main/resources/certs/user/user_sk");
+
     // TODO 使用配置文件设置参数
     public ATLChain(File certFile, File keyFile, String peerName, String peerURL, String mspId, String userName, String ordererName, String ordererURL, String channelName) {
         this.peerName = peerName;
@@ -29,6 +38,21 @@ public class ATLChain {
         this.ordererURL = ordererURL;
         this.hfClient = Utils.getHFClient(keyFile, certFile, mspId, userName);
         this.channel = Utils.getChannel(hfClient, channelName, peerName, peerURL, ordererName, ordererURL);
+    }
+
+    public ATLChain(File networkFile) throws NetworkConfigurationException, IOException, InvalidArgumentException {
+        NetworkConfig networkConfig = NetworkConfig.fromYamlFile(networkFile);
+        this.peerName = networkConfig.getPeerNames().iterator().next();
+        this.peerURL = "grpc://" + this.peerName + ":7051";
+        this.ordererName = networkConfig.getClientOrganization().getName();
+//        this.ordererURL = "grpc://" + this.ordererName + ":7050";
+        this.ordererURL = "grpc://" + this.ordererName + ":7050";
+        String mspId = networkConfig.getClientOrganization().getMspId();
+        String userName = "user";
+        String channelName = networkConfig.getChannelNames().iterator().next();
+        this.hfClient = Utils.getHFClient(keyFile, certFile, mspId, userName);
+        this.channel = Utils.getChannel(hfClient, channelName, peerName, peerURL, ordererName, ordererURL);
+
     }
 
     /**

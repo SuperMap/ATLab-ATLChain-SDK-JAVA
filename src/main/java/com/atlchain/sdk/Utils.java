@@ -27,6 +27,14 @@ class Utils {
         return userContext;
     }
 
+    static UserContext getUserContext(Enrollment enrollment, String mspId, String userName) {
+        UserContext userContext = new UserContext();
+        userContext.setMspId(mspId);
+        userContext.setName(userName);
+        userContext.setEnrollment(enrollment);
+        return userContext;
+    }
+
     static UserEnrollment getUserEnrollment(File keyFile, File certFile) {
         PrivateKey key = null;
         String certificate = null;
@@ -85,6 +93,17 @@ class Utils {
         try {
             hfClient.setCryptoSuite(CryptoSuite.Factory.getCryptoSuite());
             hfClient.setUserContext(Utils.getUserContext(keyFile, certFile, mspId, userName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return hfClient;
+    }
+
+    static HFClient getHFClient(Enrollment enrollment, String mspId, String userName) {
+        HFClient hfClient = HFClient.createNewInstance();
+        try {
+            hfClient.setCryptoSuite(CryptoSuite.Factory.getCryptoSuite());
+            hfClient.setUserContext(Utils.getUserContext(enrollment, mspId, userName));
         } catch (Exception e) {
             e.printStackTrace();
         }
