@@ -2,15 +2,11 @@ package com.atlchain.sdk;
 
 
 import org.hyperledger.fabric.sdk.*;
-import org.hyperledger.fabric.sdk.exception.CryptoException;
 import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
 import org.hyperledger.fabric.sdk.exception.NetworkConfigurationException;
-import org.hyperledger.fabric.sdk.security.CryptoSuite;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -107,7 +103,8 @@ public class ATLChain {
         // 将结果构造为 byte[][]
         ArrayList<byte[]> byteArrayList = new ArrayList<>();
         for (ProposalResponse res : proposalResponses) {
-            byteArrayList.add(res.getProposalResponse().getResponse().getPayload().toByteArray());
+//            TODO 该处返回 protobuf ByteString 类型，但是需要 ByteString 类型
+//            byteArrayList.add(res.getProposalResponse().getResponse().getPayload().toByteArray());
         }
         byte[][] bytes = byteArrayList.toArray(new byte[1][byteArrayList.size()]);
 

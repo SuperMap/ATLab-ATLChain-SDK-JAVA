@@ -29,7 +29,7 @@ public class ATLChainTest {
 
     private ATLChain atlChain;
 
-    public ATLChainTest() throws IOException, NetworkConfigurationException, InvalidArgumentException, IllegalAccessException, InstantiationException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, CryptoException {
+    public ATLChainTest() throws IOException, NetworkConfigurationException, InvalidArgumentException {
         atlChain = new ATLChain(networkFile);
     }
 
