@@ -38,17 +38,18 @@ public class ATLChain {
 
     public ATLChain(File networkFile) throws NetworkConfigurationException, IOException, InvalidArgumentException {
         NetworkConfig networkConfig = NetworkConfig.fromYamlFile(networkFile);
-        this.peerName = networkConfig.getPeerNames().iterator().next();
-        this.peerURL = "grpc://" + this.peerName + ":7051";
-        this.ordererName = networkConfig.getClientOrganization().getName();
+//        this.peerName = networkConfig.getPeerNames().iterator().next();
+////        this.peerURL = "grpc://" + this.peerName + ":7051";
+//        this.peerURL = networkConfig.getPeerUrl(peerName);
+//        this.ordererName = networkConfig.getClientOrganization().getName();
 //        this.ordererURL = "grpc://" + this.ordererName + ":7050";
-        this.ordererURL = "grpc://" + this.ordererName + ":7050";
-        String mspId = networkConfig.getClientOrganization().getMspId();
-        String userName = "user";
+//        String mspId = networkConfig.getClientOrganization().getMspId();
+//        String userName = "user";
         String channelName = networkConfig.getChannelNames().iterator().next();
-        this.hfClient = Utils.getHFClient(keyFile, certFile, mspId, userName);
-        this.channel = Utils.getChannel(hfClient, channelName, peerName, peerURL, ordererName, ordererURL);
+//        this.hfClient = Utils.getHFClient(keyFile, certFile, mspId, userName);
+//        this.channel = Utils.getChannel(hfClient, channelName, peerName, peerURL, ordererName, ordererURL);
 
+        this.channel = hfClient.loadChannelFromConfig(channelName, networkConfig);
     }
 
     /**

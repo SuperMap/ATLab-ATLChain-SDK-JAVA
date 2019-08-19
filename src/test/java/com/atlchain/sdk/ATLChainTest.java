@@ -1,6 +1,5 @@
 package com.atlchain.sdk;
 
-import org.hyperledger.fabric.sdk.exception.CryptoException;
 import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
 import org.hyperledger.fabric.sdk.exception.NetworkConfigurationException;
 import org.junit.Assert;
@@ -8,7 +7,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 public class ATLChainTest {
 //    private File certFile = new File(this.getClass().getResource("/certs/user/cert.pem").getPath());
