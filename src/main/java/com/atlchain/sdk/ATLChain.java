@@ -2,11 +2,16 @@ package com.atlchain.sdk;
 
 
 import org.hyperledger.fabric.sdk.*;
+import org.hyperledger.fabric.sdk.exception.CryptoException;
 import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
 import org.hyperledger.fabric.sdk.exception.NetworkConfigurationException;
+import org.hyperledger.fabric.sdk.exception.TransactionException;
+import org.hyperledger.fabric.sdk.security.CryptoPrimitives;
+import org.hyperledger.fabric.sdk.security.CryptoSuite;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,20 +41,18 @@ public class ATLChain {
         this.channel = Utils.getChannel(hfClient, channelName, peerName, peerURL, ordererName, ordererURL);
     }
 
-    public ATLChain(File networkFile) throws NetworkConfigurationException, IOException, InvalidArgumentException {
-        NetworkConfig networkConfig = NetworkConfig.fromYamlFile(networkFile);
-//        this.peerName = networkConfig.getPeerNames().iterator().next();
-////        this.peerURL = "grpc://" + this.peerName + ":7051";
-//        this.peerURL = networkConfig.getPeerUrl(peerName);
-//        this.ordererName = networkConfig.getClientOrganization().getName();
-//        this.ordererURL = "grpc://" + this.ordererName + ":7050";
-//        String mspId = networkConfig.getClientOrganization().getMspId();
-//        String userName = "user";
-        String channelName = networkConfig.getChannelNames().iterator().next();
-//        this.hfClient = Utils.getHFClient(keyFile, certFile, mspId, userName);
-//        this.channel = Utils.getChannel(hfClient, channelName, peerName, peerURL, ordererName, ordererURL);
-
-        this.channel = hfClient.loadChannelFromConfig(channelName, networkConfig);
+    public ATLChain(File networkFile) {
+        try {
+            NetworkConfig networkConfig = NetworkConfig.fromYamlFile(networkFile);
+            String channelName = networkConfig.getChannelNames().iterator().next();
+            this.hfClient = HFClient.createNewInstance();
+            this.hfClient.setCryptoSuite(CryptoSuite.Factory.getCryptoSuite());
+            this.hfClient.setUserContext(networkConfig.getPeerAdmin());
+            this.channel = hfClient.loadChannelFromConfig(channelName, networkConfig);
+            channel.initialize();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -105,7 +108,7 @@ public class ATLChain {
         ArrayList<byte[]> byteArrayList = new ArrayList<>();
         for (ProposalResponse res : proposalResponses) {
 //            TODO 该处返回 protobuf ByteString 类型，但是需要 ByteString 类型
-//            byteArrayList.add(res.getProposalResponse().getResponse().getPayload().toByteArray());
+            byteArrayList.add(res.getProposalResponse().getResponse().getPayload().toByteArray());
         }
         byte[][] bytes = byteArrayList.toArray(new byte[1][byteArrayList.size()]);
 

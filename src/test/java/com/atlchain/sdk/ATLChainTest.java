@@ -1,17 +1,14 @@
 package com.atlchain.sdk;
 
-import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
-import org.hyperledger.fabric.sdk.exception.NetworkConfigurationException;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 
 public class ATLChainTest {
 //    private File certFile = new File(this.getClass().getResource("/certs/user/cert.pem").getPath());
 //    private File skFile = new File(this.getClass().getResource("/certs/user/user_sk").getPath());
-    private File networkFile = new File("/home/cy/Documents/ATL/SuperMap/ATLab-ATLChain-SDK-JAVA/src/main/resources/network-config-test.yaml");
+    private File networkFile = new File(this.getClass().getResource("/network-config-test.yaml").getPath());
 
 //    private ATLChain atlChain = new ATLChain(
 //            certFile,
@@ -27,7 +24,7 @@ public class ATLChainTest {
 
     private ATLChain atlChain;
 
-    public ATLChainTest() throws IOException, NetworkConfigurationException, InvalidArgumentException {
+    public ATLChainTest() {
         atlChain = new ATLChain(networkFile);
     }
 

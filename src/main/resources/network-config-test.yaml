@@ -14,7 +14,7 @@ client:
 channels:
   atlchannel:
     orderers:
-      - TestOrgA
+      - OrdererTestOrgA
     peers:
       TestOrgA:
         endorsingPeer: true
