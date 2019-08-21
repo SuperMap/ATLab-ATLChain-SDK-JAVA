@@ -107,8 +107,11 @@ public class ATLChain {
         // 将结果构造为 byte[][]
         ArrayList<byte[]> byteArrayList = new ArrayList<>();
         for (ProposalResponse res : proposalResponses) {
-//            TODO 该处返回 protobuf ByteString 类型，但是需要 ByteString 类型
-            byteArrayList.add(res.getProposalResponse().getResponse().getPayload().toByteArray());
+            try {
+                byteArrayList.add(res.getChaincodeActionResponsePayload());
+            } catch (InvalidArgumentException e) {
+                e.printStackTrace();
+            }
         }
         byte[][] bytes = byteArrayList.toArray(new byte[1][byteArrayList.size()]);
 
