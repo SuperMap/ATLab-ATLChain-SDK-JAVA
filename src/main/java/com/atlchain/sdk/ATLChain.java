@@ -2,16 +2,10 @@ package com.atlchain.sdk;
 
 
 import org.hyperledger.fabric.sdk.*;
-import org.hyperledger.fabric.sdk.exception.CryptoException;
 import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
-import org.hyperledger.fabric.sdk.exception.NetworkConfigurationException;
-import org.hyperledger.fabric.sdk.exception.TransactionException;
-import org.hyperledger.fabric.sdk.security.CryptoPrimitives;
 import org.hyperledger.fabric.sdk.security.CryptoSuite;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -78,7 +72,11 @@ public class ATLChain {
 
         StringBuilder stringBuilder = new StringBuilder();
         for (ProposalResponse res : proposalResponses) {
-            stringBuilder.append(res.getMessage());
+            try {
+                stringBuilder.append(new String(res.getChaincodeActionResponsePayload()));
+            } catch (InvalidArgumentException e) {
+                e.printStackTrace();
+            }
         }
         return stringBuilder.toString();
     }
