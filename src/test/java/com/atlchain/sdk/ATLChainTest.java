@@ -61,47 +61,49 @@ public class ATLChainTest {
     @Test
     public void testPutManyRecord() {
         long startTime = System.currentTimeMillis();
-        for(int i = 0; i<10000; i++) {
+        int loop = 20000;
+        for(int i = 0; i<loop; i++) {
             String key = "ttkey" + i;
             try {
                 String result = atlChain.invokeByte(
                         "bcgiscc",
                         "PutRecordBytes",
-                        new byte[][]{key.getBytes(), String.valueOf(i).getBytes()}
+                        new byte[][]{key.getBytes(), ("value" + String.valueOf(i)).getBytes()}
                 );
                 System.out.println(i + ": " + result);
-                Assert.assertNotEquals("", result);
+//                Assert.assertNotEquals("", result);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
         long endTime = System.currentTimeMillis();
-        System.out.println((endTime - startTime)/1000);
+        System.out.println("Time: " + (endTime - startTime)/1000 + " ,TPS: " + 1000.0*loop/(endTime - startTime));
     }
 
     @Test
     public void testGetManyRecord() {
         long startTime = System.currentTimeMillis();
-        for(int i = 0; i<1; i++) {
-            String key = "ttkey" + i;
+        int loop = 20000;
+        for(int i = 0; i<loop; i++) {
+            String key = "tkey" + i;
             try {
                 byte[][] result = atlChain.queryByte(
                         "bcgiscc",
                         "GetRecordByKey",
-                        new byte[][]{"Line".getBytes()}
+                        new byte[][]{key.getBytes()}
                 );
                 for (byte[] res : result) {
                     System.out.println(key + ": " + new String(res));
                 }
-                Assert.assertNotEquals("", result);
+//                Assert.assertNotEquals("", result);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
         long endTime = System.currentTimeMillis();
-        System.out.println((endTime - startTime)/1000);
+        System.out.println("Time: " + (endTime - startTime) + "ms ,TPS: " + 1000.0*loop/(endTime - startTime));
     }
 
     @Test
