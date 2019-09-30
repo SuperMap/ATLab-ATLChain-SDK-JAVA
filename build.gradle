@@ -16,6 +16,11 @@ dependencies {
     compile group: 'org.hyperledger.fabric-sdk-java', name: 'fabric-sdk-java', version: '1.4.4'
 //    compile files('libs/fabric-sdk-java-1.4.5-SNAPSHOT.jar')
     testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    // HDFS
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+    compile group: 'org.apache.hadoop', name: 'hadoop-client', version: '3.2.0'
+    compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.10'
 }
 
 jar {
