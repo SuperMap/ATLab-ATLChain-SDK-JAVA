@@ -11,6 +11,7 @@ import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Properties;
 
 class Utils {
 
@@ -20,7 +21,7 @@ class Utils {
         userContext.setName(userName);
         UserEnrollment userEnrollment = null;
         try {
-            userEnrollment = getUserEnrollment(keyFile ,certFile);
+            userEnrollment = getUserEnrollment(keyFile, certFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -114,9 +115,23 @@ class Utils {
     static Channel getChannel(HFClient hfClient, String channelName, String peerName, String peerURL, String ordererName, String ordererURL) {
         Channel channel = null;
         try {
+            Properties peerProp = new Properties();
+            Properties ordererProp = new Properties();
+
+            peerProp.setProperty("pemFile", "/home/cy/Documents/ATL/SuperMap/ATLab-ATLChain/ATLChain_NETWORK/crypto-config/peerOrganizations/orgb.example.com/tlsca/tlsca.orgb.example.com-cert.pem");
+            peerProp.setProperty("sslProvider", "openSSL");
+            peerProp.setProperty("negotiationType", "TLS");
+            peerProp.setProperty("hostnameOverride", "peer0.orgb.example.com");
+            peerProp.setProperty("trustServerCertificate", "true");
+
+            ordererProp.setProperty("pemFile", "/home/cy/Documents/ATL/SuperMap/ATLab-ATLChain/ATLChain_NETWORK/crypto-config/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem");
+            ordererProp.setProperty("sslProvider", "openSSL");
+            ordererProp.setProperty("negotiationType", "TLS");
+            ordererProp.setProperty("hostnameOverride", "orderer2.example.com");
+            ordererProp.setProperty("trustServerCertificate", "true");
             channel = hfClient.newChannel(channelName);
-            Peer peer = hfClient.newPeer(peerName, peerURL);
-            Orderer orderer = hfClient.newOrderer(ordererName, ordererURL);
+            Peer peer = hfClient.newPeer(peerName, peerURL, peerProp);
+            Orderer orderer = hfClient.newOrderer(ordererName, ordererURL, ordererProp);
             channel.addPeer(peer);
             channel.addOrderer(orderer);
             channel.initialize();
@@ -136,7 +151,8 @@ class Utils {
             messageDigest.update(bytes);
             return byte2Hex(messageDigest.digest());
         } catch (Exception e) {
-            throw new RuntimeException(e);}
+            throw new RuntimeException(e);
+        }
     }
 
     public static String getSHA256(String str) {
