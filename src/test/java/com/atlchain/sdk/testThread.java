@@ -35,8 +35,12 @@ class RunnableDemoQuery implements Runnable {
     RunnableDemoQuery(String name, int count) {
         threadName = name;
         this.count = count;
-        File networkFile = new File(this.getClass().getResource("/network-config-test.yaml").getPath());
-        atlChain = new ATLChain(networkFile);
+//        File networkFile = new File(this.getClass().getResource("/network-config-test.yaml").getPath());
+//        atlChain = new ATLChain(networkFile);
+        File certFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/signcerts/Admin@orgb.example.com-cert.pem");
+        File keyFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/keystore/9277cb093acee059e1a403b19231f8c6d725c67570640a6af784caa0d86acd77_sk");
+
+        atlChain = new ATLChain(certFile, keyFile, "peer0orgb", "grpcs://peer0.orgb.example.com:7051", "OrgB", "admin", "orderer2", "grpcs://orderer2.example.com:7050", "txchannel");
     }
 
     public void run() {
@@ -47,8 +51,8 @@ class RunnableDemoQuery implements Runnable {
             String key = "tkey" + i;
             try {
                 byte[][] result = atlChain.queryByte(
-                        "bcgiscc",
-                        "GetRecordByKey",
+                        "stucc",
+                        "get",
                         new byte[][]{key.getBytes()}
                 );
 //                list.add(new String(result[0]));
@@ -88,8 +92,13 @@ class RunnableDemoWrite implements Runnable {
     RunnableDemoWrite(String name, int count) {
         threadName = name;
         this.count = count;
-        File networkFile = new File(this.getClass().getResource("/network-config-test.yaml").getPath());
-        atlChain = new ATLChain(networkFile);
+//        File networkFile = new File(this.getClass().getResource("/network-config-test.yaml").getPath());
+//        atlChain = new ATLChain(networkFile);
+        File certFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/signcerts/Admin@orgb.example.com-cert.pem");
+        File keyFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/keystore/9277cb093acee059e1a403b19231f8c6d725c67570640a6af784caa0d86acd77_sk");
+
+        atlChain = new ATLChain(certFile, keyFile, "peer0orgb", "grpcs://peer0.orgb.example.com:7051", "OrgB", "admin", "orderer2", "grpcs://orderer2.example.com:7050", "txchannel");
+
     }
 
     public void run() {
@@ -102,7 +111,7 @@ class RunnableDemoWrite implements Runnable {
 //            String fileHash = TestThread.testHDFSUpload();
 //            String key = fileHash + i;
 
-            // 文件存储链上
+//            // 文件存储链上
 //            byte[] fileBytes = new byte[0];
 //            try {
 //                fileBytes = Files.readAllBytes(Paths.get("/home/cy/Downloads/Hyperledger Global Use Cases - CDEL.pptx"));
@@ -113,8 +122,8 @@ class RunnableDemoWrite implements Runnable {
 
             try {
                 String result = atlChain.invokeByte(
-                        "bcgiscc",
-                        "PutRecordBytes",
+                        "stucc",
+                        "put",
                         new byte[][]{key.getBytes(), ("value" + i).getBytes()} // fileBytes} //
                 );
 //                System.out.println(i + ": " + result);
@@ -142,15 +151,15 @@ class RunnableDemoWrite implements Runnable {
 
 class TestThread {
     static int threadCount = 0;
-    static int totalCount = 10000;
+    static int totalCount = 20000;
     static int threadNumber = 5;
     static int count = totalCount / threadNumber;
     public static void main(String args[]) {
         long startTime = System.currentTimeMillis();
 //        testHDFSUpload();
         for (int i = 0; i < threadNumber; i++) {
-//            RunnableDemoWrite R = new RunnableDemoWrite("Thread-" + i, i);
-            RunnableDemoQuery R = new RunnableDemoQuery("Thread-" + i, i);
+            RunnableDemoWrite R = new RunnableDemoWrite("Thread-" + i, i);
+//            RunnableDemoQuery R = new RunnableDemoQuery("Thread-" + i, i);
             R.start();
         }
 
@@ -172,7 +181,7 @@ class TestThread {
     }
 
     public static String testHDFSUpload() {
-        String fileName = "nginx-1.16.0.tar.gz";
+        String fileName = "超级账本2018情况总结.pdf";
         FileSystem fs = null;
         String ipAddress = "hdfs://127.0.0.1:9000/";
         Configuration conf = new Configuration();
@@ -203,10 +212,10 @@ class TestThread {
             e.printStackTrace();
         }
 
-//        long startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         String fileHash = Utils.getSHA256(buffer);
-//        long endTime = System.currentTimeMillis();
-//        System.out.println("hash time: " + (endTime - startTime));
+        long endTime = System.currentTimeMillis();
+        System.out.println("hash time: " + (endTime - startTime));
 
 //        String upload_Location = "/hdfs_upload.tar.gz";
 //        System.out.println("upload_Location: " + fileName);

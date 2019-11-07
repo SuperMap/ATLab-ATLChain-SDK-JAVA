@@ -25,7 +25,6 @@ public class ATLChain {
     private File certFile = new File("/home/cy/Documents/ATL/SuperMap/ATLab-ATLChain-SDK-JAVA/src/main/resources/certs/user/cert.pem");
     private File keyFile = new File("/home/cy/Documents/ATL/SuperMap/ATLab-ATLChain-SDK-JAVA/src/main/resources/certs/user/user_sk");
 
-    // TODO 使用配置文件设置参数
     public ATLChain(File certFile, File keyFile, String peerName, String peerURL, String mspId, String userName, String ordererName, String ordererURL, String channelName) {
         this.peerName = peerName;
         this.peerURL = peerURL;
@@ -127,11 +126,12 @@ public class ATLChain {
         Collection<ProposalResponse> proposalResponses = null;
         TransactionProposalRequest transactionProposalRequest = Utils.getTransactionProposalRequest(hfClient, chaincodeName, functionName, args);
         try {
-            // 发送交易提案
+            // 向endoser发送交易，成功后返回要发往orderer的提案
             proposalResponses = channel.sendTransactionProposal(transactionProposalRequest);
 
-            // 发送交易
+            // 向orderer发送背书后的交易提案，成功后返回一个区块Event
             CompletableFuture<BlockEvent.TransactionEvent> completableFuture = channel.sendTransaction(proposalResponses);
+            System.out.println(completableFuture);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -140,6 +140,7 @@ public class ATLChain {
             return "No Response";
         }
 
+        // 获取返回结果
         StringBuilder stringBuilder = new StringBuilder();
         for (ProposalResponse res : proposalResponses) {
             stringBuilder.append(res.getMessage());
