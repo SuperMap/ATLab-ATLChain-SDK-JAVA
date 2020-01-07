@@ -8,7 +8,7 @@ import java.io.File;
 public class ATLChainTest {
 //    private File certFile = new File(this.getClass().getResource("/certs/user/cert.pem").getPath());
 //    private File skFile = new File(this.getClass().getResource("/certs/user/user_sk").getPath());
-    private File networkFile = new File(this.getClass().getResource("/network-config-test.yaml").getPath());
+    private File networkFile = new File(this.getClass().getResource("/network-config-testC.yaml").getPath());
 
 //    private ATLChain atlChain = new ATLChain(
 //            certFile,
@@ -25,19 +25,18 @@ public class ATLChainTest {
     private ATLChain atlChain;
 
     public ATLChainTest() {
-        atlChain = new ATLChain(networkFile);
+        atlChain = ATLChain.getATLChain("txchannel", networkFile);
     }
 
     @Test
     public void testQuery() {
         try {
-            String result = atlChain.query(
-                    "javacc",
-                    "query",
+            String result = atlChain.getAtlTransaction().query(
+                    "bcgiscc",
+                    "GetRecordByKey",
                     new String[]{"a"}
                     );
             System.out.println(result);
-            Assert.assertNotEquals("", result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -46,13 +45,12 @@ public class ATLChainTest {
     @Test
     public void testInvoke() {
         try {
-            String result = atlChain.invoke(
-                    "javacc",
-                    "invoke",
-                    new String[]{"b", "a" ,"10"}
+            String result = atlChain.getAtlTransaction().invoke(
+                    "bcgiscc",
+                    "PutRecord",
+                    new String[]{"a" ,"10"}
                     );
             System.out.println(result);
-            Assert.assertNotEquals("", result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,7 +63,7 @@ public class ATLChainTest {
         for(int i = 0; i<loop; i++) {
             String key = "ttkey" + i;
             try {
-                String result = atlChain.invokeByte(
+                String result = atlChain.getAtlTransaction().invokeByte(
                         "bcgiscc",
                         "PutRecordBytes",
                         new byte[][]{key.getBytes(), ("value" + String.valueOf(i)).getBytes()}
@@ -84,11 +82,11 @@ public class ATLChainTest {
     @Test
     public void testGetManyRecord() {
         long startTime = System.currentTimeMillis();
-        int loop = 20000;
+        int loop = 5000;
         for(int i = 0; i<loop; i++) {
-            String key = "tkey" + i;
+            String key = "DString3-max-" + i;
             try {
-                byte[][] result = atlChain.queryByte(
+                byte[][] result = atlChain.getAtlTransaction().queryByte(
                         "bcgiscc",
                         "GetRecordByKey",
                         new byte[][]{key.getBytes()}
@@ -113,7 +111,7 @@ public class ATLChainTest {
         String startKey = "ttkey0";
         String endKey = "ttkey99999";
         try {
-            byte[][] result = atlChain.queryByte(
+            byte[][] result = atlChain.getAtlTransaction().queryByte(
                     "bcgiscc",
                     "GetRecordByKeyRange",
                     new byte[][]{startKey.getBytes(), endKey.getBytes()}

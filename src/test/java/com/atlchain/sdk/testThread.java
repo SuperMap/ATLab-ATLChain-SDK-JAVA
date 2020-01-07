@@ -35,12 +35,12 @@ class RunnableDemoQuery implements Runnable {
     RunnableDemoQuery(String name, int count) {
         threadName = name;
         this.count = count;
-//        File networkFile = new File(this.getClass().getResource("/network-config-test.yaml").getPath());
-//        atlChain = new ATLChain(networkFile);
-        File certFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/signcerts/Admin@orgb.example.com-cert.pem");
-        File keyFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/keystore/9277cb093acee059e1a403b19231f8c6d725c67570640a6af784caa0d86acd77_sk");
-
-        atlChain = new ATLChain(certFile, keyFile, "peer0orgb", "grpcs://peer0.orgb.example.com:7051", "OrgB", "admin", "orderer2", "grpcs://orderer2.example.com:7050", "txchannel");
+        File networkFile = new File(this.getClass().getResource("/network-config-testC.yaml").getPath());
+        atlChain = ATLChain.getATLChain("txchannel", networkFile);
+//        File certFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/signcerts/Admin@orgb.example.com-cert.pem");
+//        File keyFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/keystore/9277cb093acee059e1a403b19231f8c6d725c67570640a6af784caa0d86acd77_sk");
+//
+//        atlChain = new ATLChain(certFile, keyFile, "peer0orgb", "grpcs://peer0.orgb.example.com:7051", "OrgB", "admin", "orderer2", "grpcs://orderer2.example.com:7050", "txchannel");
     }
 
     public void run() {
@@ -50,7 +50,7 @@ class RunnableDemoQuery implements Runnable {
         for(int i = startIndex; i < endIndex; i++) {
             String key = "tkey" + i;
             try {
-                byte[][] result = atlChain.queryByte(
+                byte[][] result = atlChain.getAtlTransaction().queryByte(
                         "stucc",
                         "get",
                         new byte[][]{key.getBytes()}
@@ -92,12 +92,12 @@ class RunnableDemoWrite implements Runnable {
     RunnableDemoWrite(String name, int count) {
         threadName = name;
         this.count = count;
-//        File networkFile = new File(this.getClass().getResource("/network-config-test.yaml").getPath());
-//        atlChain = new ATLChain(networkFile);
-        File certFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/signcerts/Admin@orgb.example.com-cert.pem");
-        File keyFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/keystore/9277cb093acee059e1a403b19231f8c6d725c67570640a6af784caa0d86acd77_sk");
-
-        atlChain = new ATLChain(certFile, keyFile, "peer0orgb", "grpcs://peer0.orgb.example.com:7051", "OrgB", "admin", "orderer2", "grpcs://orderer2.example.com:7050", "txchannel");
+        File networkFile = new File(this.getClass().getResource("/network-config-testC.yaml").getPath());
+        atlChain = ATLChain.getATLChain("txchannel", networkFile);
+//        File certFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/signcerts/Admin@orgb.example.com-cert.pem");
+//        File keyFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/keystore/9277cb093acee059e1a403b19231f8c6d725c67570640a6af784caa0d86acd77_sk");
+//
+//        atlChain = new ATLChain(certFile, keyFile, "peer0orgb", "grpcs://peer0.orgb.example.com:7051", "OrgB", "admin", "orderer2", "grpcs://orderer2.example.com:7050", "txchannel");
 
     }
 
@@ -121,7 +121,7 @@ class RunnableDemoWrite implements Runnable {
             String key = "tkey" + i;
 
             try {
-                String result = atlChain.invokeByte(
+                String result = atlChain.getAtlTransaction().invokeByte(
                         "stucc",
                         "put",
                         new byte[][]{key.getBytes(), ("value" + i).getBytes()} // fileBytes} //
