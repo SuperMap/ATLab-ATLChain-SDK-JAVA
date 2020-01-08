@@ -32,6 +32,10 @@ public class ATLChain {
         }
     }
 
+    public Channel getChannel() {
+        return channel;
+    }
+
     public static ATLChain getATLChain(String channelName, File networkConfigFile) {
         return new ATLChain(channelName, networkConfigFile);
     }

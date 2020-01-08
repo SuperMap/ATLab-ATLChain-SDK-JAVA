@@ -145,7 +145,7 @@ public class ATLChaincodeImp implements ATLChaincode {
     }
 
     @Override
-    public List<Query.ChaincodeInfo> list(Peer peer) {
+    public List<Query.ChaincodeInfo> listInstalled(Peer peer) {
         List<Query.ChaincodeInfo> chaincodeInfos = null;
         try {
             chaincodeInfos = hfClient.queryInstalledChaincodes(peer);
@@ -155,6 +155,19 @@ public class ATLChaincodeImp implements ATLChaincode {
             e.printStackTrace();
         }
 
+        return chaincodeInfos;
+    }
+
+    @Override
+    public List<Query.ChaincodeInfo> listInstantiated(Peer peer) {
+        List<Query.ChaincodeInfo> chaincodeInfos = null;
+        try {
+            chaincodeInfos = channel.queryInstantiatedChaincodes(peer);
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        } catch (ProposalException e) {
+            e.printStackTrace();
+        }
         return chaincodeInfos;
     }
 
