@@ -1,23 +1,26 @@
 package com.atlchain.sdk;
 
-import org.hyperledger.fabric.sdk.exception.ChaincodeEndorsementPolicyParseException;
-import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
-import org.hyperledger.fabric.sdk.exception.ProposalException;
+import org.hyperledger.fabric.protos.peer.Query;
+import org.hyperledger.fabric.sdk.BlockEvent;
+import org.hyperledger.fabric.sdk.Peer;
+import org.hyperledger.fabric.sdk.TransactionRequest;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface ATLChaincode {
 
-    public String install() throws InvalidArgumentException, ProposalException;
 
-    public String instantiate(File chaincodeEndorsementPolicy) throws IOException, ChaincodeEndorsementPolicyParseException;
+    public boolean install(String chaincodeName, String chaincodeVersion, String chaincodePath, TransactionRequest.Type type);
+
+    public CompletableFuture<BlockEvent.TransactionEvent> instantiate(String chaincodeName, String chaincodeVersion, String chaincodePath, File chaincodeEndorsementPolicyFile, TransactionRequest.Type type);
 
     public String upgrade();
 
-    public String[] list();
+    public List<Query.ChaincodeInfo> list(Peer peer);
 
-    public String pack();
-
-    public String signpackage();
+    // Fabric sdk java not support.
+    // public String pack();
+    // public String signpackage();
 }
