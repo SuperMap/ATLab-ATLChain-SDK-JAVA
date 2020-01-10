@@ -1,4 +1,4 @@
-package com.atlchain.sdk;
+package com.supermap.blockchain.sdk;
 
 import org.hyperledger.fabric.sdk.*;
 import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-public class ATLTransactionImp implements ATLTransaction {
+public class SmTransactionImp implements SmTransaction {
     private HFClient hfClient;
     private Channel channel;
 
-    public ATLTransactionImp(HFClient hfClient, Channel channel) {
+    public SmTransactionImp(HFClient hfClient, Channel channel) {
         this.hfClient = hfClient;
         this.channel = channel;
     };

@@ -1,4 +1,4 @@
-package com.atlchain.sdk;
+package com.supermap.blockchain.sdk;
 
 
 import org.hyperledger.fabric.sdk.Channel;
@@ -11,7 +11,7 @@ import java.io.File;
 /**
  * ATLChain 客户端
  */
-public class ATLChain {
+public class SmChain {
     private HFClient hfClient;
     private Channel channel;
 
@@ -19,7 +19,7 @@ public class ATLChain {
      * 通过 yaml 配置文件实例化
      * @param networkConfigFile
      */
-    private ATLChain(String channelName, File networkConfigFile) {
+    private SmChain(String channelName, File networkConfigFile) {
         try {
             NetworkConfig networkConfig = NetworkConfig.fromYamlFile(networkConfigFile);
             hfClient = HFClient.createNewInstance();
@@ -36,24 +36,24 @@ public class ATLChain {
         return channel;
     }
 
-    public static ATLChain getATLChain(String channelName, File networkConfigFile) {
-        return new ATLChain(channelName, networkConfigFile);
+    public static SmChain getATLChain(String channelName, File networkConfigFile) {
+        return new SmChain(channelName, networkConfigFile);
     }
 
-    public ATLTransaction getAtlTransaction() {
-        return new ATLTransactionImp(hfClient, channel);
+    public SmTransaction getAtlTransaction() {
+        return new SmTransactionImp(hfClient, channel);
     }
 
-    public ATLChaincode getATLChaincode() {
+    public SmChaincode getATLChaincode() {
 
-        return new ATLChaincodeImp(hfClient, channel);
+        return new SmChaincodeImp(hfClient, channel);
     }
 
-    public ATLChannel getATLChannel() {
-        return new ATLChannelImp();
+    public SmChannel getATLChannel() {
+        return new SmChannelImp(hfClient, channel);
     }
 
-    public ATLCA getATLCa() {
-        return new ATLCAImp();
+    public SmCA getATLCa() {
+        return new SmCAImp();
     }
 }

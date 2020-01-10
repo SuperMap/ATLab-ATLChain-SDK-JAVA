@@ -1,4 +1,4 @@
-package com.atlchain.sdk;
+package com.supermap.blockchain.sdk;
 
 import org.hyperledger.fabric.sdk.NetworkConfig;
 import org.hyperledger.fabric_ca.sdk.HFCAClient;
@@ -7,7 +7,7 @@ import org.hyperledger.fabric_ca.sdk.exception.InvalidArgumentException;
 import java.io.File;
 import java.io.IOException;
 
-public interface ATLCA {
+public interface SmCA {
     public void registe();
 
     public void enroll();

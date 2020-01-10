@@ -1,4 +1,4 @@
-package com.atlchain.sdk;
+package com.supermap.blockchain.sdk;
 
 import org.hyperledger.fabric.protos.peer.Query;
 import org.hyperledger.fabric.sdk.*;
@@ -14,9 +14,9 @@ import java.util.logging.Logger;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class ATLChaincodeImp implements ATLChaincode {
+public class SmChaincodeImp implements SmChaincode {
 
-    Logger logger = Logger.getLogger(ATLChaincodeImp.class.getName());
+    Logger logger = Logger.getLogger(SmChaincodeImp.class.getName());
 
     private HFClient hfClient;
     private Channel channel;
@@ -25,13 +25,18 @@ public class ATLChaincodeImp implements ATLChaincode {
     private Collection<ProposalResponse> failed = new LinkedList<>();
     private Collection<ProposalResponse> proposalResponses = new LinkedList<>();
 
-    public ATLChaincodeImp(HFClient hfClient, Channel channel) {
+    public SmChaincodeImp(HFClient hfClient, Channel channel) {
         this.hfClient = hfClient;
         this.channel = channel;
     }
 
     @Override
-    public boolean install(String chaincodeName, String chaincodeVersion, String chaincodePath, TransactionRequest.Type type) {
+    public boolean install(
+            String chaincodeName,
+            String chaincodeVersion,
+            String chaincodePath,
+            TransactionRequest.Type type
+    ) {
         // 构造链码安装提案请求
         try {
             InstallProposalRequest installProposalRequest = hfClient.newInstallProposalRequest();
@@ -69,7 +74,14 @@ public class ATLChaincodeImp implements ATLChaincode {
     }
 
     @Override
-    public CompletableFuture<BlockEvent.TransactionEvent> instantiate(String chaincodeName, String chaincodeVersion, String chaincodePath, File chaincodeEndorsementPolicyFile, TransactionRequest.Type type) {
+    public CompletableFuture<BlockEvent.TransactionEvent> instantiate(
+            String chaincodeName,
+            String chaincodeVersion,
+            String chaincodePath,
+            File chaincodeEndorsementPolicyFile,
+            TransactionRequest.Type type
+    ) {
+        CompletableFuture<BlockEvent.TransactionEvent> result = null;
         ChaincodeEndorsementPolicy chaincodeEndorsementPolicy = new ChaincodeEndorsementPolicy();
         Channel.NOfEvents nOfEvents = null;
         try {
@@ -81,7 +93,7 @@ public class ATLChaincodeImp implements ATLChaincode {
             instantiateProposalRequest.setChaincodeID(getChaincodeID(chaincodeName, chaincodeVersion, chaincodePath, type));
             instantiateProposalRequest.setFcn("init");
             instantiateProposalRequest.setChaincodeEndorsementPolicy(chaincodeEndorsementPolicy);
-            instantiateProposalRequest.setProposalWaitTime(360000L);
+            instantiateProposalRequest.setProposalWaitTime(300000L);
             instantiateProposalRequest.setArgs("");
             Map<String, byte[]> tm = new HashMap<>();
             tm.put("HyperLedgerFabric", "InstantiateProposalRequest:JavaSDK".getBytes(UTF_8));
@@ -118,7 +130,7 @@ public class ATLChaincodeImp implements ATLChaincode {
                 nOfEvents.addEventHubs(channel.getEventHubs());
             }
 
-            return channel.sendTransaction(successful, Channel.TransactionOptions.createTransactionOptions()
+            result = channel.sendTransaction(successful, Channel.TransactionOptions.createTransactionOptions()
                     .userContext(hfClient.getUserContext())
                     .shuffleOrders(false)
                     .orderers(channel.getOrderers())
@@ -134,14 +146,85 @@ public class ATLChaincodeImp implements ATLChaincode {
             e.printStackTrace();
         }
 
-        return null;
+        return result;
     }
 
     @Override
-    public String upgrade() {
-        UpgradeProposalRequest upgradeProposalRequest = hfClient.newUpgradeProposalRequest();
+    public CompletableFuture<BlockEvent.TransactionEvent> upgrade(
+            String chaincodeName,
+            String chaincodeVersion,
+            String chaincodePath,
+            File chaincodeEndorsementPolicyFile,
+            TransactionRequest.Type type
+    ) {
+        CompletableFuture<BlockEvent.TransactionEvent> result = null;
+        ChaincodeEndorsementPolicy chaincodeEndorsementPolicy = new ChaincodeEndorsementPolicy();
+        Channel.NOfEvents nOfEvents = null;
+        try {
 
-        return null;
+            chaincodeEndorsementPolicy.fromYamlFile(chaincodeEndorsementPolicyFile);
+
+            UpgradeProposalRequest upgradeProposalRequest = hfClient.newUpgradeProposalRequest();
+            upgradeProposalRequest.setChaincodeLanguage(type);
+            upgradeProposalRequest.setChaincodeID(getChaincodeID(chaincodeName, chaincodeVersion, chaincodePath, type));
+            upgradeProposalRequest.setFcn("init");
+            upgradeProposalRequest.setChaincodeEndorsementPolicy(chaincodeEndorsementPolicy);
+            upgradeProposalRequest.setProposalWaitTime(300000L);
+            upgradeProposalRequest.setArgs("");
+
+            Map<String, byte[]> tm = new HashMap<>();
+            tm.put("HyperLedgerFabric", "UpgradeProposalRequest:JavaSDK".getBytes(UTF_8));
+            tm.put("method", "UpgradeProposalRequest".getBytes(UTF_8));
+            upgradeProposalRequest.setTransientMap(tm);
+
+            clear();
+
+            Collection<Peer> peers = channel.getPeers();
+            // 向通道中的节点发送实例化提案请求
+            proposalResponses = channel.sendUpgradeProposal(upgradeProposalRequest);
+
+            for (ProposalResponse response : proposalResponses) {
+                if (response.isVerified() && response.getStatus().equals(ProposalResponse.Status.SUCCESS)) {
+                    successful.add(response);
+                } else {
+                    failed.add(response);
+                }
+            }
+
+            if (failed.size() > 0) {
+                for (ProposalResponse fail : failed) {
+                    logger.warning("Not enough endorsers for upgrade: " + successful.size() + " endorser failed with " + fail.getMessage() + ", on peer " + fail.getPeer());
+                }
+                ProposalResponse first = failed.iterator().next();
+                logger.warning("Not enough endorsers for upgrade: " + successful.size() + " endorser failed with " + first.getMessage() + ". Was verified: " + first.isVerified());
+            }
+
+            nOfEvents = Channel.NOfEvents.createNofEvents();
+            if (!channel.getPeers(EnumSet.of(Peer.PeerRole.EVENT_SOURCE)).isEmpty()) {
+                nOfEvents.addPeers(channel.getPeers(EnumSet.of(Peer.PeerRole.EVENT_SOURCE)));
+            }
+            if (!channel.getEventHubs().isEmpty()) {
+                nOfEvents.addEventHubs(channel.getEventHubs());
+            }
+
+            result = channel.sendTransaction(successful, Channel.TransactionOptions.createTransactionOptions()
+                    .userContext(hfClient.getUserContext())
+                    .shuffleOrders(false)
+                    .orderers(channel.getOrderers())
+                    .nOfEvents(nOfEvents)
+            );
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ChaincodeEndorsementPolicyParseException e) {
+            e.printStackTrace();
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        } catch (ProposalException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     @Override
@@ -171,7 +254,12 @@ public class ATLChaincodeImp implements ATLChaincode {
         return chaincodeInfos;
     }
 
-    private ChaincodeID getChaincodeID(String chaincodeName, String chaincodeVersion, String chaincodePath, TransactionRequest.Type type) {
+    private ChaincodeID getChaincodeID(
+            String chaincodeName,
+            String chaincodeVersion,
+            String chaincodePath,
+            TransactionRequest.Type type
+    ) {
         ChaincodeID chaincodeID = null;
         switch (type) {
             case JAVA:

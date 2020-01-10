@@ -1,42 +1,27 @@
-package com.atlchain.sdk;
+package com.supermap.blockchain.sdk;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.http.Consts;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.junit.Test;
 
 import java.io.*;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 class RunnableDemoQuery implements Runnable {
     private Thread t;
     private String threadName;
     private int count;
-    private ATLChain atlChain;
+    private SmChain smChain;
     private List<String> list = new ArrayList<String>();
 
     RunnableDemoQuery(String name, int count) {
         threadName = name;
         this.count = count;
         File networkFile = new File(this.getClass().getResource("/network-config-testC.yaml").getPath());
-        atlChain = ATLChain.getATLChain("txchannel", networkFile);
+        smChain = SmChain.getATLChain("txchannel", networkFile);
 //        File certFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/signcerts/Admin@orgb.example.com-cert.pem");
 //        File keyFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/keystore/9277cb093acee059e1a403b19231f8c6d725c67570640a6af784caa0d86acd77_sk");
 //
@@ -50,7 +35,7 @@ class RunnableDemoQuery implements Runnable {
         for(int i = startIndex; i < endIndex; i++) {
             String key = "tkey" + i;
             try {
-                byte[][] result = atlChain.getAtlTransaction().queryByte(
+                byte[][] result = smChain.getAtlTransaction().queryByte(
                         "stucc",
                         "get",
                         new byte[][]{key.getBytes()}
@@ -87,13 +72,13 @@ class RunnableDemoWrite implements Runnable {
     private Thread t;
     private String threadName;
     private int count;
-    private ATLChain atlChain;
+    private SmChain smChain;
 
     RunnableDemoWrite(String name, int count) {
         threadName = name;
         this.count = count;
         File networkFile = new File(this.getClass().getResource("/network-config-testC.yaml").getPath());
-        atlChain = ATLChain.getATLChain("txchannel", networkFile);
+        smChain = SmChain.getATLChain("txchannel", networkFile);
 //        File certFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/signcerts/Admin@orgb.example.com-cert.pem");
 //        File keyFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/keystore/9277cb093acee059e1a403b19231f8c6d725c67570640a6af784caa0d86acd77_sk");
 //
@@ -121,7 +106,7 @@ class RunnableDemoWrite implements Runnable {
             String key = "tkey" + i;
 
             try {
-                String result = atlChain.getAtlTransaction().invokeByte(
+                String result = smChain.getAtlTransaction().invokeByte(
                         "stucc",
                         "put",
                         new byte[][]{key.getBytes(), ("value" + i).getBytes()} // fileBytes} //

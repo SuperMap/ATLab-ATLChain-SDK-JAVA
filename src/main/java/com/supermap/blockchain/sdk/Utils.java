@@ -1,4 +1,4 @@
-package com.atlchain.sdk;
+package com.supermap.blockchain.sdk;
 
 import org.hyperledger.fabric.sdk.*;
 import org.hyperledger.fabric.sdk.security.CryptoSuite;

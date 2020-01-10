@@ -1,6 +1,6 @@
-package com.atlchain.sdk;
+package com.supermap.blockchain.sdk;
 
-public class ATLCAImp implements ATLCA {
+public class SmCAImp implements SmCA {
     @Override
     public void registe() {
 
