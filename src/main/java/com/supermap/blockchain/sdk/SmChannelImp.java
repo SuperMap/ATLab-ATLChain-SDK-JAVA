@@ -67,8 +67,4 @@ public class SmChannelImp implements SmChannel {
         }
         return channelSet;
     }
-
-    @Override
-    public void update() {
-    }
 }

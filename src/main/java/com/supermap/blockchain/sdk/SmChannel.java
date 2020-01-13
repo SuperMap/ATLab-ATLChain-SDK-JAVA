@@ -15,6 +15,4 @@ public interface SmChannel {
     SmBlockInfo getBlockInfoByNumber(Peer peer, long number);
 
     Set<String> listChannelOfPeerJoined(Peer peer);
-
-    void update();
 }

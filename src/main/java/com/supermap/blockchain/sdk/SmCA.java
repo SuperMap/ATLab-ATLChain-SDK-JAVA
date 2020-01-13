@@ -1,20 +1,21 @@
 package com.supermap.blockchain.sdk;
 
-import org.hyperledger.fabric.sdk.NetworkConfig;
-import org.hyperledger.fabric_ca.sdk.HFCAClient;
+import org.hyperledger.fabric.sdk.Enrollment;
+import org.hyperledger.fabric_ca.sdk.exception.EnrollmentException;
+import org.hyperledger.fabric_ca.sdk.exception.GenerateCRLException;
 import org.hyperledger.fabric_ca.sdk.exception.InvalidArgumentException;
+import org.hyperledger.fabric_ca.sdk.exception.RevocationException;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.Date;
 
 public interface SmCA {
-    public void registe();
+    String registe(SmUser userName) throws Exception;
 
-    public void enroll();
+    Enrollment enroll(String userName, String secret) throws EnrollmentException, InvalidArgumentException;
 
-    public void reenroll();
+    Enrollment reenroll(SmUser userName) throws EnrollmentException, InvalidArgumentException;
 
-    public void revoke();
+    String revoke(String userName, String reason) throws InvalidArgumentException, RevocationException;
 
-    public void getCRL();
+    String getCRL(Date revokedBefore, Date revokedAfter, Date expireBefore, Date expireAfter) throws GenerateCRLException, InvalidArgumentException;
 }

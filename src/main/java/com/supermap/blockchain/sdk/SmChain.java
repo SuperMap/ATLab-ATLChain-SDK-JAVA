@@ -14,6 +14,8 @@ import java.io.File;
 public class SmChain {
     private HFClient hfClient;
     private Channel channel;
+    private NetworkConfig networkConfig;
+
 
     /**
      * 通过 yaml 配置文件实例化
@@ -21,7 +23,7 @@ public class SmChain {
      */
     private SmChain(String channelName, File networkConfigFile) {
         try {
-            NetworkConfig networkConfig = NetworkConfig.fromYamlFile(networkConfigFile);
+            networkConfig = NetworkConfig.fromYamlFile(networkConfigFile);
             hfClient = HFClient.createNewInstance();
             hfClient.setCryptoSuite(CryptoSuite.Factory.getCryptoSuite());
             hfClient.setUserContext(networkConfig.getPeerAdmin());
@@ -36,24 +38,24 @@ public class SmChain {
         return channel;
     }
 
-    public static SmChain getATLChain(String channelName, File networkConfigFile) {
+    public static SmChain getSmChain(String channelName, File networkConfigFile) {
         return new SmChain(channelName, networkConfigFile);
     }
 
-    public SmTransaction getAtlTransaction() {
+    public SmTransaction getSmTransaction() {
         return new SmTransactionImp(hfClient, channel);
     }
 
-    public SmChaincode getATLChaincode() {
+    public SmChaincode getSmChaincode() {
 
         return new SmChaincodeImp(hfClient, channel);
     }
 
-    public SmChannel getATLChannel() {
+    public SmChannel getSmChannel() {
         return new SmChannelImp(hfClient, channel);
     }
 
-    public SmCA getATLCa() {
-        return new SmCAImp();
+    public SmCA getSmCa(String OrgName) {
+        return new SmCAImp(networkConfig, OrgName);
     }
 }

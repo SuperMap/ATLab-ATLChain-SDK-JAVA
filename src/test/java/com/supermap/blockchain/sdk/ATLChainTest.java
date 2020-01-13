@@ -25,13 +25,13 @@ public class ATLChainTest {
     private SmChain smChain;
 
     public ATLChainTest() {
-        smChain = SmChain.getATLChain("txchannel", networkFile);
+        smChain = SmChain.getSmChain("txchannel", networkFile);
     }
 
     @Test
     public void testQuery() {
         try {
-            String result = smChain.getAtlTransaction().query(
+            String result = smChain.getSmTransaction().query(
                     "testCommon",
                     "GetRecordByKey",
                     new String[]{"a"}
@@ -45,7 +45,7 @@ public class ATLChainTest {
     @Test
     public void testInvoke() {
         try {
-            String result = smChain.getAtlTransaction().invoke(
+            String result = smChain.getSmTransaction().invoke(
                     "testCommon",
                     "PutRecord",
                     new String[]{"a" ,"10"}
@@ -63,7 +63,7 @@ public class ATLChainTest {
         for(int i = 0; i<loop; i++) {
             String key = "ttkey" + i;
             try {
-                String result = smChain.getAtlTransaction().invokeByte(
+                String result = smChain.getSmTransaction().invokeByte(
                         "bcgiscc",
                         "PutRecordBytes",
                         new byte[][]{key.getBytes(), ("value" + String.valueOf(i)).getBytes()}
@@ -86,7 +86,7 @@ public class ATLChainTest {
         for(int i = 0; i<loop; i++) {
             String key = "DString3-max-" + i;
             try {
-                byte[][] result = smChain.getAtlTransaction().queryByte(
+                byte[][] result = smChain.getSmTransaction().queryByte(
                         "bcgiscc",
                         "GetRecordByKey",
                         new byte[][]{key.getBytes()}
@@ -111,7 +111,7 @@ public class ATLChainTest {
         String startKey = "ttkey0";
         String endKey = "ttkey99999";
         try {
-            byte[][] result = smChain.getAtlTransaction().queryByte(
+            byte[][] result = smChain.getSmTransaction().queryByte(
                     "bcgiscc",
                     "GetRecordByKeyRange",
                     new byte[][]{startKey.getBytes(), endKey.getBytes()}

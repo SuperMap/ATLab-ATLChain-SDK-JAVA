@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class SmChaincodeImpTest {
     private final String networkConfigFile = this.getClass().getResource("/network-config-testC.yaml").getFile();
-    private final SmChain smChain = SmChain.getATLChain("txchannel", new File(networkConfigFile));
+    private final SmChain smChain = SmChain.getSmChain("txchannel", new File(networkConfigFile));
 
     private final String chaincodeName = "testCommon";
     private final String chaincodeVersion = "1.0";
@@ -21,13 +21,13 @@ public class SmChaincodeImpTest {
 
     @Test
     public void installTest() {
-        boolean result = smChain.getATLChaincode().install(chaincodeName, chaincodeVersion, chaincodePath, TransactionRequest.Type.JAVA);
+        boolean result = smChain.getSmChaincode().install(chaincodeName, chaincodeVersion, chaincodePath, TransactionRequest.Type.JAVA);
         Assert.assertTrue(result);
     }
 
     @Test
     public void instantiateTest() {
-        CompletableFuture<BlockEvent.TransactionEvent> completableFuture = smChain.getATLChaincode().instantiate(chaincodeName, chaincodeVersion, chaincodePath, new File(chaincodeEndorsementPolicyFile), TransactionRequest.Type.JAVA);
+        CompletableFuture<BlockEvent.TransactionEvent> completableFuture = smChain.getSmChaincode().instantiate(chaincodeName, chaincodeVersion, chaincodePath, new File(chaincodeEndorsementPolicyFile), TransactionRequest.Type.JAVA);
         System.out.println(completableFuture.toString());
         Assert.assertTrue(completableFuture.isDone());
     }
@@ -35,10 +35,10 @@ public class SmChaincodeImpTest {
     @Test
     public void upgradeTest() {
         String upgradeVersion = "1.4";
-        boolean result = smChain.getATLChaincode().install(chaincodeName, upgradeVersion, chaincodePath, TransactionRequest.Type.JAVA);
+        boolean result = smChain.getSmChaincode().install(chaincodeName, upgradeVersion, chaincodePath, TransactionRequest.Type.JAVA);
 
         if (result) {
-            CompletableFuture<BlockEvent.TransactionEvent> completableFuture = smChain.getATLChaincode().upgrade(chaincodeName, upgradeVersion, chaincodePath, new File(chaincodeEndorsementPolicyFile), TransactionRequest.Type.JAVA);
+            CompletableFuture<BlockEvent.TransactionEvent> completableFuture = smChain.getSmChaincode().upgrade(chaincodeName, upgradeVersion, chaincodePath, new File(chaincodeEndorsementPolicyFile), TransactionRequest.Type.JAVA);
             // TODO 交易响应结果处理
 //            final Collection<CompletableFuture<BlockEvent.TransactionEvent>> futures = new ArrayList<>(1);
 //            final CompletableFuture<Void> voidCompletableFuture = CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()]));
@@ -89,7 +89,7 @@ public class SmChaincodeImpTest {
     public void listInstalledTest() {
         Channel channel = smChain.getChannel();
         Peer peer = channel.getPeers().iterator().next();
-        List<Query.ChaincodeInfo> list = smChain.getATLChaincode().listInstalled(peer);
+        List<Query.ChaincodeInfo> list = smChain.getSmChaincode().listInstalled(peer);
         for (Query.ChaincodeInfo info : list) {
             if ("testCommon".equals(info.getName())) {
                 System.out.println(info);
@@ -102,7 +102,7 @@ public class SmChaincodeImpTest {
     public void listInstantiatedTest() {
         Channel channel = smChain.getChannel();
         Peer peer = channel.getPeers().iterator().next();
-        List<Query.ChaincodeInfo> list = smChain.getATLChaincode().listInstantiated(peer);
+        List<Query.ChaincodeInfo> list = smChain.getSmChaincode().listInstantiated(peer);
         for (Query.ChaincodeInfo info : list) {
             if ("testCommon".equals(info.getName())) {
                 System.out.println(info);

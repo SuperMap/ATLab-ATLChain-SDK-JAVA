@@ -21,7 +21,7 @@ class RunnableDemoQuery implements Runnable {
         threadName = name;
         this.count = count;
         File networkFile = new File(this.getClass().getResource("/network-config-testC.yaml").getPath());
-        smChain = SmChain.getATLChain("txchannel", networkFile);
+        smChain = SmChain.getSmChain("txchannel", networkFile);
 //        File certFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/signcerts/Admin@orgb.example.com-cert.pem");
 //        File keyFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/keystore/9277cb093acee059e1a403b19231f8c6d725c67570640a6af784caa0d86acd77_sk");
 //
@@ -35,7 +35,7 @@ class RunnableDemoQuery implements Runnable {
         for(int i = startIndex; i < endIndex; i++) {
             String key = "tkey" + i;
             try {
-                byte[][] result = smChain.getAtlTransaction().queryByte(
+                byte[][] result = smChain.getSmTransaction().queryByte(
                         "stucc",
                         "get",
                         new byte[][]{key.getBytes()}
@@ -78,7 +78,7 @@ class RunnableDemoWrite implements Runnable {
         threadName = name;
         this.count = count;
         File networkFile = new File(this.getClass().getResource("/network-config-testC.yaml").getPath());
-        smChain = SmChain.getATLChain("txchannel", networkFile);
+        smChain = SmChain.getSmChain("txchannel", networkFile);
 //        File certFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/signcerts/Admin@orgb.example.com-cert.pem");
 //        File keyFile = new File("/home/cy/Documents/Practice/FabricRaft/config/crypto-config/peerOrganizations/orgb.example.com/users/Admin@orgb.example.com/msp/keystore/9277cb093acee059e1a403b19231f8c6d725c67570640a6af784caa0d86acd77_sk");
 //
@@ -106,7 +106,7 @@ class RunnableDemoWrite implements Runnable {
             String key = "tkey" + i;
 
             try {
-                String result = smChain.getAtlTransaction().invokeByte(
+                String result = smChain.getSmTransaction().invokeByte(
                         "stucc",
                         "put",
                         new byte[][]{key.getBytes(), ("value" + i).getBytes()} // fileBytes} //
