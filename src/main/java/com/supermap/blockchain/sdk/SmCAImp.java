@@ -3,6 +3,7 @@ package com.supermap.blockchain.sdk;
 import org.hyperledger.fabric.sdk.Enrollment;
 import org.hyperledger.fabric.sdk.NetworkConfig;
 import org.hyperledger.fabric.sdk.User;
+import org.hyperledger.fabric_ca.sdk.EnrollmentRequest;
 import org.hyperledger.fabric_ca.sdk.HFCAClient;
 import org.hyperledger.fabric_ca.sdk.RegistrationRequest;
 import org.hyperledger.fabric_ca.sdk.exception.EnrollmentException;
@@ -12,6 +13,8 @@ import org.hyperledger.fabric_ca.sdk.exception.RevocationException;
 
 import java.util.Collection;
 import java.util.Date;
+
+import static org.hyperledger.fabric_ca.sdk.HFCAClient.DEFAULT_PROFILE_NAME;
 
 public class SmCAImp implements SmCA {
     private HFCAClient hfcaClient = null;
@@ -30,9 +33,12 @@ public class SmCAImp implements SmCA {
     }
 
     @Override
-    public String registe(SmUser userName) throws Exception {
-        RegistrationRequest registrationRequest = new RegistrationRequest(userName.getName());
-        String secret = hfcaClient.register(registrationRequest, admin);
+    public String register(SmUser user, SmUser adminUser) throws Exception {
+        RegistrationRequest registrationRequest = new RegistrationRequest(user.getName());
+        if (null != user.getEnrollSecret()) {
+            registrationRequest.setSecret(user.getEnrollSecret());
+        }
+        String secret = hfcaClient.register(registrationRequest, adminUser);
         return secret;
     }
 
@@ -45,16 +51,25 @@ public class SmCAImp implements SmCA {
 
     @Override
     public Enrollment reenroll(SmUser user) throws EnrollmentException, InvalidArgumentException {
-        return hfcaClient.reenroll(user);
+//        return hfcaClient.reenroll(user, req);
+        return null;
     }
 
     @Override
-    public String revoke(String userName, String reason) throws InvalidArgumentException, RevocationException {
-        return hfcaClient.revoke(admin, userName, reason, true);
+    public String revoke(String userName, String reason, SmUser adminUser) throws InvalidArgumentException, RevocationException {
+        String result = hfcaClient.revoke(adminUser, userName, reason, true);
+        return result;
     }
 
     @Override
-    public String getCRL(Date revokedBefore, Date revokedAfter, Date expireBefore, Date expireAfter) throws GenerateCRLException, InvalidArgumentException {
-        return hfcaClient.generateCRL(admin, revokedBefore, revokedAfter, expireBefore, expireAfter);
+    public String revoke(Enrollment enrollment, String reason, SmUser adminUser) throws InvalidArgumentException, RevocationException {
+//        String result = hfcaClient.revoke(adminUser, smEnrollment, reason, true);
+//        return result;
+        return null;
+    }
+
+    @Override
+    public String getCRL(User registrar, Date revokedBefore, Date revokedAfter, Date expireBefore, Date expireAfter) throws GenerateCRLException, InvalidArgumentException {
+        return hfcaClient.generateCRL(registrar, revokedBefore, revokedAfter, expireBefore, expireAfter);
     }
 }

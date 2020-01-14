@@ -13,6 +13,7 @@ public class SmUser implements User {
     private String affiliation;
     private Enrollment enrollment;
     private String mspId;
+    private String enrollSecret = null;
 
     @Override
     public String getName() {
@@ -66,5 +67,13 @@ public class SmUser implements User {
 
     public void setMspId(String mspId) {
         this.mspId = mspId;
+    }
+
+    public String getEnrollSecret() {
+        return enrollSecret;
+    }
+
+    public void setEnrollSecret(String enrollSecret) {
+        this.enrollSecret = enrollSecret;
     }
 }
