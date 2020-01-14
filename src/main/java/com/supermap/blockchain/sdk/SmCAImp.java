@@ -69,7 +69,7 @@ public class SmCAImp implements SmCA {
     }
 
     @Override
-    public String getCRL(User registrar, Date revokedBefore, Date revokedAfter, Date expireBefore, Date expireAfter) throws GenerateCRLException, InvalidArgumentException {
-        return hfcaClient.generateCRL(registrar, revokedBefore, revokedAfter, expireBefore, expireAfter);
+    public String getCRL(User adminUser, Date revokedBefore, Date revokedAfter, Date expireBefore, Date expireAfter) throws GenerateCRLException, InvalidArgumentException {
+        return hfcaClient.generateCRL(adminUser, revokedBefore, revokedAfter, expireBefore, expireAfter);
     }
 }

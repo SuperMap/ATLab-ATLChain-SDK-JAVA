@@ -10,10 +10,18 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * 链码处理类
+ * Supermap 链码处理接口
  */
 public interface SmChaincode {
 
+    /**
+     * 安装链码
+     * @param chaincodeName 链码名
+     * @param chaincodeVersion 链码版本
+     * @param chaincodePath 链码源码路径
+     * @param type 链码开发语言
+     * @return 是否安装成功
+     */
     boolean install(
             String chaincodeName,
             String chaincodeVersion,
@@ -21,6 +29,15 @@ public interface SmChaincode {
             TransactionRequest.Type type
     );
 
+    /**
+     * 实例化链码
+     * @param chaincodeName 链码名
+     * @param chaincodeVersion 链码版本
+     * @param chaincodePath 链码源码路径
+     * @param chaincodeEndorsementPolicyFile 链码背书策略配置文件
+     * @param type 链码开发语言
+     * @return 交易时间集合
+     */
     CompletableFuture<BlockEvent.TransactionEvent> instantiate(
             String chaincodeName,
             String chaincodeVersion,
@@ -29,6 +46,15 @@ public interface SmChaincode {
             TransactionRequest.Type type
     );
 
+    /**
+     * 更新链码
+     * @param chaincodeName 链码名
+     * @param chaincodeVersion 链码版本
+     * @param chaincodePath 链码源码路径
+     * @param chaincodeEndorsementPolicyFile 链码背书策略配置文件
+     * @param type 链码开发语言
+     * @return 交易时间集合
+     */
     CompletableFuture<BlockEvent.TransactionEvent> upgrade(
             String chaincodeName,
             String chaincodeVersion,
@@ -37,8 +63,18 @@ public interface SmChaincode {
             TransactionRequest.Type type
     );
 
+    /**
+     * 获取某个节点已安装的链码列表
+     * @param peer 节点
+     * @return 链码信息集合
+     */
     List<Query.ChaincodeInfo> listInstalled(Peer peer);
 
+    /**
+     * 获取某个节点已实例化的链码列表
+     * @param peer 节点
+     * @return 链码信息集合
+     */
     List<Query.ChaincodeInfo> listInstantiated(Peer peer);
 
     // Fabric sdk java not support.

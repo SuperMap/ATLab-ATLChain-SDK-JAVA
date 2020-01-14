@@ -9,17 +9,16 @@ import org.hyperledger.fabric.sdk.security.CryptoSuite;
 import java.io.File;
 
 /**
- * ATLChain 客户端
+ * SmChain 客户端，基于 HFClient 封装
  */
 public class SmChain {
     private HFClient hfClient;
     private Channel channel;
     private NetworkConfig networkConfig;
 
-
     /**
      * 通过 yaml 配置文件实例化
-     * @param networkConfigFile
+     * @param networkConfigFile 网络配置文件
      */
     private SmChain(String channelName, File networkConfigFile) {
         try {

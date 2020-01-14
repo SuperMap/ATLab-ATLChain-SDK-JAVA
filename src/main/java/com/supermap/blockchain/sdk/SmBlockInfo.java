@@ -1,7 +1,17 @@
 package com.supermap.blockchain.sdk;
 
+/**
+ * Supermap 区块信息类
+ */
 public class SmBlockInfo {
+    /**
+     * 当前区块Hash
+     */
     private String currentBlockHash;
+
+    /**
+     * 上一个区块Hash
+     */
     private String previousBlockHash;
 
     public String getCurrentBlockHash() {

@@ -5,6 +5,9 @@ import org.hyperledger.fabric.sdk.User;
 
 import java.util.Set;
 
+/**
+ * Supermap 用户类
+ */
 public class SmUser implements User {
 
     private String name;
