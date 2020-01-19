@@ -15,12 +15,12 @@ import java.util.Date;
 public interface SmCA {
     /**
      * 注册用户
-     * @param userName 用户名
+     * @param user 注册用户
      * @param adminUser 管理员用户
      * @return 注册密码，用于获取密钥
      * @throws Exception
      */
-    String register(SmUser userName, SmUser adminUser) throws Exception;
+    String register(SmUser user, SmUser adminUser) throws Exception;
 
     /**
      * 登记用户，注册完成后可以登记用户，登记之后可获得用户密钥
@@ -34,12 +34,12 @@ public interface SmCA {
 
     /**
      * 重登记注销登记的用户
-     * @param userName 用户名
+     * @param user 重注册用户
      * @return 登记信息
      * @throws EnrollmentException
      * @throws InvalidArgumentException
      */
-    Enrollment reenroll(SmUser userName) throws EnrollmentException, InvalidArgumentException;
+    Enrollment reenroll(SmUser user) throws EnrollmentException, InvalidArgumentException;
 
     /**
      * 注销用户，注销后该用户名永久失效

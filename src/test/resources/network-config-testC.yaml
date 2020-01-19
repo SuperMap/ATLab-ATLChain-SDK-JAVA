@@ -1,0 +1,84 @@
+name: "Network-Config-Test"
+x-type: "hlfv1"
+description: "The network used in the integration tests"
+version: 1.0.0
+
+client:
+  organization: OrgC
+  credentialStore:
+    path: "/tmp/hfc-kvs"
+    cryptoStore:
+      path: "/tmp/hfc-cvs"
+    wallet: wallet-name
+
+channels:
+  txchannel:
+    orderers:
+      - Orderer0
+    peers:
+      peer0:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+    chaincodes:
+      - bimcc:v1.04
+
+organizations:
+  OrgC:
+    mspid: OrgC
+    peers:
+      - peer0
+
+    adminPrivateKey:
+      path: /home/cy/Documents/Practice/ATLab-ATLChain/ATLChain_NETWORK/crypto-config/peerOrganizations/orgc.example.com/users/Admin@orgc.example.com/msp/keystore/3a62f14ad67b2c58dfd97fcbd370ab88cd5dae2ef241b02057a09fd32c91149c_sk
+
+    signedCert:
+      path: /home/cy/Documents/Practice/ATLab-ATLChain/ATLChain_NETWORK/crypto-config/peerOrganizations/orgc.example.com/users/Admin@orgc.example.com/msp/signcerts/Admin@orgc.example.com-cert.pem
+
+    certificateAuthorities:
+      - ca-orgC
+
+orderers:
+  Orderer0:
+    url: grpcs://orderer2.example.com:7050
+    tlsCACerts:
+      path: /home/cy/Documents/Practice/ATLab-ATLChain/ATLChain_NETWORK/crypto-config/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
+    grpcOptions:
+      grpc-max-send-message-length: 15
+      grpc.keepalive_time_ms: 360000
+      grpc.keepalive_timeout_ms: 180000
+
+peers:
+  peer0:
+    url: grpcs://peer0.orgc.example.com:7051
+    tlsCACerts:
+      path: /home/cy/Documents/Practice/ATLab-ATLChain/ATLChain_NETWORK/crypto-config/peerOrganizations/orgc.example.com/tlsca/tlsca.orgc.example.com-cert.pem
+    grpcOptions:
+      grpc.http2.keepalive_time: 15
+
+certificateAuthorities:
+  ca-orgC:
+    url: http://ca.orgc.example.com:7054
+    # the properties specified under this object are passed to the 'http' client verbatim when
+    # making the request to the Fabric-CA server
+    #    httpOptions:
+    #      verify: true
+
+    # Fabric-CA supports dynamic user enrollment via REST APIs. A "root" user, a.k.a registrar, is
+    # needed to enroll and invoke new users.
+    registrar: #single entitiy
+      enrollId: admin
+      enrollSecret: adminpw
+    # [Optional] The optional name of the CA.
+    caName: ca
+    tlsCACerts:
+      # Comma-Separated list of paths
+      path: /home/cy/Desktop/ca-key.pem
+
+#      # Client key and cert for TLS mutual auth with Fabric CA. If the target Fabric CA server
+#      # does not have TLS mutual auth turned on, then this section is not needed
+#      client:
+#        keyfile: path/to/tls/fabricca/certs/client/client_fabric_client-key.pem
+#        certfile: path/to/tls/fabricca/certs/client/client_fabric_client.pem
