@@ -14,6 +14,9 @@ import java.util.logging.Logger;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+ * Supermap 链码处理接口实现类
+ */
 public class SmChaincodeImp implements SmChaincode {
 
     Logger logger = Logger.getLogger(SmChaincodeImp.class.getName());

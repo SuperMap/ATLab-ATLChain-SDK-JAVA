@@ -16,6 +16,9 @@ import java.util.Date;
 
 import static org.hyperledger.fabric_ca.sdk.HFCAClient.DEFAULT_PROFILE_NAME;
 
+/**
+ * Supermap CA 接口实现类
+ */
 public class SmCAImp implements SmCA {
     private HFCAClient hfcaClient = null;
     private User admin = null;

@@ -14,7 +14,7 @@ public class SmChaincodeImpTest {
     private final SmChain smChain = SmChain.getSmChain("txchannel", new File(networkConfigFile));
 
     private final String chaincodeName = "testCommon";
-    private final String chaincodeVersion = "1.0";
+    private final String chaincodeVersion = "1.5";
     private final String chaincodePath = "/home/cy/Documents/ATL/SuperMap/ATLab-Chaincodes/java/Common";
     private final String chaincodeEndorsementPolicyFile = this.getClass().getResource("/chaincode-endorsement-policy.yaml").getFile();
     private final String channelName = "txchannel";
@@ -34,7 +34,7 @@ public class SmChaincodeImpTest {
 
     @Test
     public void upgradeTest() {
-        String upgradeVersion = "1.4";
+        String upgradeVersion = "1.006";
         boolean result = smChain.getSmChaincode().install(chaincodeName, upgradeVersion, chaincodePath, TransactionRequest.Type.JAVA);
 
         if (result) {

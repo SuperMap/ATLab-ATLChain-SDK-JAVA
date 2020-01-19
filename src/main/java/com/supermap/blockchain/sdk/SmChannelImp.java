@@ -9,6 +9,9 @@ import java.util.Set;
 import java.util.concurrent.BlockingDeque;
 import java.util.logging.Logger;
 
+/**
+ * Supermap 通道处理接口实现类
+ */
 public class SmChannelImp implements SmChannel {
 
     Logger logger = Logger.getLogger(SmChannelImp.class.getName());

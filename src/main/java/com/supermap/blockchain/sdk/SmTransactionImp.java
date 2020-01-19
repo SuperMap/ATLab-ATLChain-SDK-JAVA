@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * 交易处理接口实现类
+ */
 public class SmTransactionImp implements SmTransaction {
     private HFClient hfClient;
     private Channel channel;
