@@ -4,14 +4,12 @@ import org.bouncycastle.asn1.x509.TBSCertList;
 import org.bouncycastle.cert.X509CRLHolder;
 import org.bouncycastle.openssl.PEMParser;
 import org.hyperledger.fabric.sdk.Enrollment;
-import org.hyperledger.fabric_ca.sdk.EnrollmentRequest;
 import org.hyperledger.fabric_ca.sdk.exception.EnrollmentException;
 import org.hyperledger.fabric_ca.sdk.exception.InvalidArgumentException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.StringReader;
 import java.security.PrivateKey;
 import java.util.Base64;
@@ -19,7 +17,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.hyperledger.fabric_ca.sdk.HFCAClient.DEFAULT_PROFILE_NAME;
 
 public class SmCAImpTest {
     private final String networkConfigFile = this.getClass().getResource("/network-config-testC.yaml").getFile();

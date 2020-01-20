@@ -3,7 +3,6 @@ package com.supermap.blockchain.sdk;
 import org.hyperledger.fabric.sdk.Enrollment;
 import org.hyperledger.fabric.sdk.NetworkConfig;
 import org.hyperledger.fabric.sdk.User;
-import org.hyperledger.fabric_ca.sdk.EnrollmentRequest;
 import org.hyperledger.fabric_ca.sdk.HFCAClient;
 import org.hyperledger.fabric_ca.sdk.RegistrationRequest;
 import org.hyperledger.fabric_ca.sdk.exception.EnrollmentException;
@@ -13,8 +12,6 @@ import org.hyperledger.fabric_ca.sdk.exception.RevocationException;
 
 import java.util.Collection;
 import java.util.Date;
-
-import static org.hyperledger.fabric_ca.sdk.HFCAClient.DEFAULT_PROFILE_NAME;
 
 /**
  * Supermap CA 接口实现类

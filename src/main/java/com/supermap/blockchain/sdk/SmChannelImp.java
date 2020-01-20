@@ -1,13 +1,13 @@
 package com.supermap.blockchain.sdk;
 
-import org.apache.commons.codec.binary.Hex;
 import org.hyperledger.fabric.sdk.*;
 import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
 import org.hyperledger.fabric.sdk.exception.ProposalException;
 
 import java.util.Set;
-import java.util.concurrent.BlockingDeque;
 import java.util.logging.Logger;
+
+import static com.supermap.blockchain.sdk.Utils.getHexString;
 
 /**
  * Supermap 通道处理接口实现类
@@ -30,8 +30,8 @@ public class SmChannelImp implements SmChannel {
         BlockchainInfo blockchainInfo = null;
         try {
             blockchainInfo = channel.queryBlockchainInfo(channel.getPeers().iterator().next());
-            smBlockChainInfo.setCurrentBlockHash(Hex.encodeHexString(blockchainInfo.getCurrentBlockHash()));
-            smBlockChainInfo.setPreviousBlockHash(Hex.encodeHexString(blockchainInfo.getPreviousBlockHash()));
+            smBlockChainInfo.setCurrentBlockHash(getHexString(blockchainInfo.getCurrentBlockHash()));
+            smBlockChainInfo.setPreviousBlockHash(getHexString(blockchainInfo.getPreviousBlockHash()));
             smBlockChainInfo.setHeight(blockchainInfo.getHeight());
         } catch (ProposalException e) {
             e.printStackTrace();
@@ -47,8 +47,8 @@ public class SmChannelImp implements SmChannel {
         SmBlockInfo smBlockInfo = new SmBlockInfo();
         try {
             blockInfo = channel.queryBlockByNumber(peer, number);
-            smBlockInfo.setCurrentBlockHash(Hex.encodeHexString(blockInfo.getDataHash()));
-            smBlockInfo.setPreviousBlockHash(Hex.encodeHexString(blockInfo.getPreviousHash()));
+            smBlockInfo.setCurrentBlockHash(getHexString(blockInfo.getDataHash()));
+            smBlockInfo.setPreviousBlockHash(getHexString(blockInfo.getPreviousHash()));
         } catch (InvalidArgumentException e) {
             e.printStackTrace();
         } catch (ProposalException e) {

@@ -1,5 +1,6 @@
 package com.supermap.blockchain.sdk;
 
+import org.apache.commons.codec.binary.Hex;
 import org.hyperledger.fabric.sdk.ChaincodeID;
 import org.hyperledger.fabric.sdk.HFClient;
 import org.hyperledger.fabric.sdk.TransactionProposalRequest;
@@ -112,6 +113,17 @@ class Utils {
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
         return (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(pemStr.getBytes()));
 
+    }
+
+    /**
+     * 将十六进制字节码转码为普通字符串。
+     * 如： \260-\256D\323i:\311\343\321\267\212f\206\230]a\0331\2440\264T\243qW*9\a\367\374q
+     * 转码后为： b02dae44d3693ac9e3d1b78a6686985d611b31a430b454a371572a3907f7fc71
+     * @param bytes 十六进制字节码
+     * @return 字符串
+     */
+    public static String getHexString(byte[] bytes) {
+        return Hex.encodeHexString(bytes);
     }
 
     /**

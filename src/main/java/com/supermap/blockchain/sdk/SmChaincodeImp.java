@@ -217,6 +217,7 @@ public class SmChaincodeImp implements SmChaincode {
                     .nOfEvents(nOfEvents)
             );
 
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ChaincodeEndorsementPolicyParseException e) {
