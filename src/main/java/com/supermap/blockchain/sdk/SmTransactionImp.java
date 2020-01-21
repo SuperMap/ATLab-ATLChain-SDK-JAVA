@@ -5,6 +5,7 @@ import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -13,6 +14,9 @@ import java.util.concurrent.CompletableFuture;
 public class SmTransactionImp implements SmTransaction {
     private HFClient hfClient;
     private Channel channel;
+    private Collection<ProposalResponse> successful = new LinkedList<>();
+    private Collection<ProposalResponse> failed = new LinkedList<>();
+    private Collection<ProposalResponse> proposalResponses = new LinkedList<>();
 
     public SmTransactionImp(HFClient hfClient, Channel channel) {
         this.hfClient = hfClient;
@@ -27,9 +31,8 @@ public class SmTransactionImp implements SmTransaction {
      * @return  查询结果
      */
     @Override
-    public String query( String chaincodeName, String functionName, String[] args) {
+    public String queryByString(String chaincodeName, String functionName, String[] args) {
         TransactionProposalRequest queryByChaincodeRequest = Utils.getTransactionProposalRequest(hfClient, chaincodeName, functionName, args);
-        Collection<ProposalResponse> proposalResponses = null;
         try {
             // 发送交易提案
             proposalResponses = channel.sendTransactionProposal(queryByChaincodeRequest);
@@ -60,9 +63,8 @@ public class SmTransactionImp implements SmTransaction {
      * @return  查询结果
      */
     @Override
-    public byte[][] queryByte(String chaincodeName, String functionName, byte[][] args) {
+    public byte[][] queryByByte(String chaincodeName, String functionName, byte[][] args) {
         TransactionProposalRequest queryByChaincodeRequest = Utils.getTransactionProposalRequest(hfClient, chaincodeName, functionName, args);
-        Collection<ProposalResponse> proposalResponses = null;
         try {
             // 发送交易提案
             proposalResponses = channel.sendTransactionProposal(queryByChaincodeRequest);
@@ -96,14 +98,33 @@ public class SmTransactionImp implements SmTransaction {
      * @return  执行结果
      */
     @Override
-    public String invoke(String chaincodeName, String functionName, String[] args) {
-        Collection<ProposalResponse> proposalResponses = null;
+    public String invokeByString(String chaincodeName, String functionName, String[] args) {
+        proposalResponses = null;
         TransactionProposalRequest transactionProposalRequest = Utils.getTransactionProposalRequest(hfClient, chaincodeName, functionName, args);
         try {
-            // 向endoser发送交易，成功后返回要发往orderer的提案
+            // 向所有背书节点发送交易，成功后返回要发往排序节点的提案
             proposalResponses = channel.sendTransactionProposal(transactionProposalRequest);
 
-            // 向orderer发送背书后的交易提案，成功后返回一个区块Event
+            // 判断背书结果
+            for (ProposalResponse response : proposalResponses) {
+                if (response.getStatus() == ProposalResponse.Status.SUCCESS) {
+                    System.out.printf("Successful transaction proposal response Txid: %s from peer %s", response.getTransactionID(), response.getPeer().getName());
+                    successful.add(response);
+                } else {
+                    failed.add(response);
+                }
+            }
+
+            System.out.printf("Received %d transaction proposal responses. Successful+verified: %d . Failed: %d",
+                    proposalResponses.size(), successful.size(), failed.size());
+            if (failed.size() > 0) {
+                ProposalResponse firstTransactionProposalResponse = failed.iterator().next();
+                return ("Not enough endorsers for invoke:" + failed.size() + " endorser error: " +
+                        firstTransactionProposalResponse.getMessage() +
+                        ". Was verified: " + firstTransactionProposalResponse.isVerified());
+            }
+
+            // 向排序节点发送背书后的交易提案，成功后返回一个区块事件
             CompletableFuture<BlockEvent.TransactionEvent> completableFuture = channel.sendTransaction(proposalResponses);
             System.out.println(completableFuture);
         } catch (Exception e) {
@@ -130,8 +151,7 @@ public class SmTransactionImp implements SmTransaction {
      * @return  执行结果
      */
     @Override
-    public String invokeByte(String chaincodeName, String functionName, byte[][] args) {
-        Collection<ProposalResponse> proposalResponses = null;
+    public String invokeByByte(String chaincodeName, String functionName, byte[][] args) {
         TransactionProposalRequest transactionProposalRequest = Utils.getTransactionProposalRequest(hfClient, chaincodeName, functionName, args);
         try {
             // 发送交易提案

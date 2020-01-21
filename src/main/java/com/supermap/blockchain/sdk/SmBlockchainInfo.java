@@ -1,7 +1,7 @@
 package com.supermap.blockchain.sdk;
 
 /**
- * Supermap 区块链信息类
+ * Supermap 区块链信息类，默认包含最新的区块信息
  */
 public class SmBlockchainInfo extends SmBlockInfo {
 

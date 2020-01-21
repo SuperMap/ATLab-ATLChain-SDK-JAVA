@@ -17,7 +17,7 @@ import java.util.Base64;
  */
 class Utils {
     /**
-     * 构造交易提案请求
+     * 构造参数为字符串类型的交易提案请求
      * @param hfClient fabric 客户端
      * @param chaincodeName 链码名
      * @param functionName 方法名
@@ -33,7 +33,7 @@ class Utils {
     }
 
     /**
-     * 构造交易提案请求
+     * 构造参数为字节数组类型的交易提案请求
      * @param hfClient fabric 客户端
      * @param chaincodeName 链码名
      * @param functionName 方法名
@@ -49,7 +49,7 @@ class Utils {
     }
 
     /**
-     * 获取Hash字符串
+     * 计算特定字节数组唯一的Hash值
      * @param bytes 原文
      * @return Hash字符串
      */
@@ -68,7 +68,7 @@ class Utils {
     }
 
     /**
-     * 获取Hash字符串
+     * 计算特定字符串唯一的Hash值
      * @param str 原文
      * @return Hash字符串
      */
@@ -77,9 +77,9 @@ class Utils {
     }
 
     /**
-     * Base64 编码
+     * 将字节数组编码为 Base64 字符串
      * @param bytes 原文
-     * @return Base64字符串
+     * @return Base64 字符串
      */
     public static String encodeBase64(byte[] bytes) {
         return Base64.getEncoder().encodeToString(bytes);
@@ -95,7 +95,7 @@ class Utils {
     }
 
     /**
-     * Base64 解码
+     * 将 Base64 字符串解码为原文字节数组
      * @param str Base64字符串
      * @return 原文
      */
@@ -116,7 +116,7 @@ class Utils {
     }
 
     /**
-     * 将十六进制字节码转码为普通字符串。
+     * 将十六进制字节码转码为普通字符串。Fabric中的一些值以十六进制字节码方式返回，可用该方法进行转码
      * 如： \260-\256D\323i:\311\343\321\267\212f\206\230]a\0331\2440\264T\243qW*9\a\367\374q
      * 转码后为： b02dae44d3693ac9e3d1b78a6686985d611b31a430b454a371572a3907f7fc71
      * @param bytes 十六进制字节码

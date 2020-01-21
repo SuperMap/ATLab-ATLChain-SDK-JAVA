@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import static com.supermap.blockchain.sdk.Utils.getHexString;
 
 /**
- * Supermap 通道处理接口实现类
+ * Supermap 通道管理接口实现类
  */
 public class SmChannelImp implements SmChannel {
 

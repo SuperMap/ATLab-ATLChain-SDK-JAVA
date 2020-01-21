@@ -6,7 +6,7 @@ import org.hyperledger.fabric.sdk.User;
 import java.util.Set;
 
 /**
- * Supermap 用户类
+ * Supermap 用户类，只有特定的用户才可以对区块链进行操作，因此操作区块链需要获取合适的用户对象
  */
 public class SmUser implements User {
 

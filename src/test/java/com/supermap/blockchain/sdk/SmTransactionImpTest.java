@@ -5,34 +5,21 @@ import org.junit.Test;
 
 import java.io.File;
 
-public class ATLChainTest {
-//    private File certFile = new File(this.getClass().getResource("/certs/user/cert.pem").getPath());
-//    private File skFile = new File(this.getClass().getResource("/certs/user/user_sk").getPath());
+public class SmTransactionImpTest {
+    private static final String channelName = "txchannel";
+    private static final String chaincodeName = "testCommon";
     private File networkFile = new File(this.getClass().getResource("/network-config-testC.yaml").getPath());
-
-//    private ATLChain atlChain = new ATLChain(
-//            certFile,
-//            skFile,
-//            "TestOrgA",
-//            "grpc://172.16.15.66:7051",
-//            "TestOrgA",
-//            "admin",
-//            "OrdererTestOrgA",
-//            "grpc://172.16.15.66:7050",
-//            "atlchannel"
-//    );
-
     private SmChain smChain;
 
-    public ATLChainTest() {
-        smChain = SmChain.getSmChain("txchannel", networkFile);
+    public SmTransactionImpTest() {
+        smChain = SmChain.getChain(channelName, networkFile);
     }
 
     @Test
     public void testQuery() {
         try {
-            String result = smChain.getSmTransaction().query(
-                    "testCommon",
+            String result = smChain.getTransaction().queryByString(
+                    chaincodeName,
                     "GetRecordByKey",
                     new String[]{"a"}
                     );
@@ -45,8 +32,8 @@ public class ATLChainTest {
     @Test
     public void testInvoke() {
         try {
-            String result = smChain.getSmTransaction().invoke(
-                    "testCommon",
+            String result = smChain.getTransaction().invokeByString(
+                    chaincodeName,
                     "PutRecord",
                     new String[]{"a" ,"10"}
                     );
@@ -63,8 +50,8 @@ public class ATLChainTest {
         for(int i = 0; i<loop; i++) {
             String key = "ttkey" + i;
             try {
-                String result = smChain.getSmTransaction().invokeByte(
-                        "bcgiscc",
+                String result = smChain.getTransaction().invokeByByte(
+                        chaincodeName,
                         "PutRecordBytes",
                         new byte[][]{key.getBytes(), ("value" + String.valueOf(i)).getBytes()}
                 );
@@ -86,8 +73,8 @@ public class ATLChainTest {
         for(int i = 0; i<loop; i++) {
             String key = "DString3-max-" + i;
             try {
-                byte[][] result = smChain.getSmTransaction().queryByte(
-                        "bcgiscc",
+                byte[][] result = smChain.getTransaction().queryByByte(
+                        chaincodeName,
                         "GetRecordByKey",
                         new byte[][]{key.getBytes()}
                 );
@@ -111,8 +98,8 @@ public class ATLChainTest {
         String startKey = "ttkey0";
         String endKey = "ttkey99999";
         try {
-            byte[][] result = smChain.getSmTransaction().queryByte(
-                    "bcgiscc",
+            byte[][] result = smChain.getTransaction().queryByByte(
+                    chaincodeName,
                     "GetRecordByKeyRange",
                     new byte[][]{startKey.getBytes(), endKey.getBytes()}
             );

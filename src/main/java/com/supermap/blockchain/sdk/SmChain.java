@@ -9,7 +9,7 @@ import org.hyperledger.fabric.sdk.security.CryptoSuite;
 import java.io.File;
 
 /**
- * SmChain 客户端，基于 HFClient 封装
+ * SmChain 客户端，基于 HFClient 封装。是操作区块链的主入口
  */
 public class SmChain {
     private HFClient hfClient;
@@ -33,28 +33,28 @@ public class SmChain {
         }
     }
 
-    public Channel getChannel() {
+    Channel getHFChannel() {
         return channel;
     }
 
-    public static SmChain getSmChain(String channelName, File networkConfigFile) {
+    public static SmChain getChain(String channelName, File networkConfigFile) {
         return new SmChain(channelName, networkConfigFile);
     }
 
-    public SmTransaction getSmTransaction() {
+    public SmTransaction getTransaction() {
         return new SmTransactionImp(hfClient, channel);
     }
 
-    public SmChaincode getSmChaincode() {
+    public SmChaincode getChaincode() {
 
         return new SmChaincodeImp(hfClient, channel);
     }
 
-    public SmChannel getSmChannel() {
+    public SmChannel getChannel() {
         return new SmChannelImp(hfClient, channel);
     }
 
-    public SmCA getSmCa(String OrgName) {
+    public SmCA getCa(String OrgName) {
         return new SmCAImp(networkConfig, OrgName);
     }
 }

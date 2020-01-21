@@ -5,7 +5,10 @@ import org.hyperledger.fabric.sdk.Peer;
 import java.util.Set;
 
 /**
- * Supermap 通道处理接口
+ * Supermap 通道管理接口，用于获取通道区块信息，查询特定节点所加入的通道等。
+ *
+ * Fabric 中一个通道中可以加入多个组织形成一个“联盟”，每个通道拥有一套账本，
+ * 加入不同通道的同一个节点，会在本地保存两份区块链账本，但是两套账本互相隔离。
  */
 public interface SmChannel {
 
@@ -24,7 +27,7 @@ public interface SmChannel {
     SmBlockInfo getBlockInfoByNumber(Peer peer, long number);
 
     /**
-     * 获取节点加入的通道
+     * 获取指定节点所加入的通道
      * @param peer 节点
      * @return 通道名列表
      */

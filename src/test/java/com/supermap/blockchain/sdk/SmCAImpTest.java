@@ -20,8 +20,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SmCAImpTest {
     private final String networkConfigFile = this.getClass().getResource("/network-config-testC.yaml").getFile();
-    private final SmChain smChain = SmChain.getSmChain("txchannel", new File(networkConfigFile));
-    private SmCA smCA = smChain.getSmCa("OrgC");
+    private final SmChain smChain = SmChain.getChain("txchannel", new File(networkConfigFile));
+    private SmCA smCA = smChain.getCa("OrgC");
 
     private static SmUser admin;
     private static SmUser user;

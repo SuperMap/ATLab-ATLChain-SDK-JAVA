@@ -10,7 +10,10 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Supermap 链码处理接口
+ * Supermap 链码管理接口，用于安装、实例化、升级链码等。
+ *
+ * 链码即执行业务逻辑的“智能合约”，该接口主要用于管理链码，调用链
+ * 码（即执行交易）请参考 SmTransaction 接口。
  */
 public interface SmChaincode {
 
@@ -19,7 +22,7 @@ public interface SmChaincode {
      * @param chaincodeName 链码名
      * @param chaincodeVersion 链码版本
      * @param chaincodePath 链码源码路径
-     * @param type 链码开发语言
+     * @param type 链码开发语言，包括 java，node，go
      * @return 是否安装成功
      */
     boolean install(
