@@ -16,7 +16,7 @@ import java.util.Date;
 /**
  * Supermap CA 接口实现类
  */
-public class SmCAImp implements SmCA {
+class SmCAImp implements SmCA {
     private HFCAClient hfcaClient = null;
     private User admin = null;
 

@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * 交易处理接口实现类
  */
-public class SmTransactionImp implements SmTransaction {
+class SmTransactionImp implements SmTransaction {
     private HFClient hfClient;
     private Channel channel;
     private Collection<ProposalResponse> successful = new LinkedList<>();
@@ -108,14 +108,14 @@ public class SmTransactionImp implements SmTransaction {
             // 判断背书结果
             for (ProposalResponse response : proposalResponses) {
                 if (response.getStatus() == ProposalResponse.Status.SUCCESS) {
-                    System.out.printf("Successful transaction proposal response Txid: %s from peer %s", response.getTransactionID(), response.getPeer().getName());
+                    System.out.printf("Successful transaction proposal response Txid: %s from peer %s \n", response.getTransactionID(), response.getPeer().getName());
                     successful.add(response);
                 } else {
                     failed.add(response);
                 }
             }
 
-            System.out.printf("Received %d transaction proposal responses. Successful+verified: %d . Failed: %d",
+            System.out.printf("Received %d transaction proposal responses. Successful+verified: %d . Failed: %d \n",
                     proposalResponses.size(), successful.size(), failed.size());
             if (failed.size() > 0) {
                 ProposalResponse firstTransactionProposalResponse = failed.iterator().next();

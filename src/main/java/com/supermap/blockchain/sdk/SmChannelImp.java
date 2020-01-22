@@ -12,7 +12,7 @@ import static com.supermap.blockchain.sdk.Utils.getHexString;
 /**
  * Supermap 通道管理接口实现类
  */
-public class SmChannelImp implements SmChannel {
+class SmChannelImp implements SmChannel {
 
     Logger logger = Logger.getLogger(SmChannelImp.class.getName());
 
