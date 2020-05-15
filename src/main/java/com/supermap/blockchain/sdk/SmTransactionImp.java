@@ -100,33 +100,43 @@ class SmTransactionImp implements SmTransaction {
     @Override
     public String invokeByString(String chaincodeName, String functionName, String[] args) {
         proposalResponses = null;
+//        long startTime = System.currentTimeMillis();
         TransactionProposalRequest transactionProposalRequest = Utils.getTransactionProposalRequest(hfClient, chaincodeName, functionName, args);
+//        long proposalTime = System.currentTimeMillis();
+//        long waitEndoserTime = 0;
+//        long judgeEndosermentTime = 0;
+//        long ordererTime = 0;
+
+
         try {
             // 向所有背书节点发送交易，成功后返回要发往排序节点的提案
             proposalResponses = channel.sendTransactionProposal(transactionProposalRequest);
+//            waitEndoserTime = System.currentTimeMillis();
 
             // 判断背书结果
             for (ProposalResponse response : proposalResponses) {
                 if (response.getStatus() == ProposalResponse.Status.SUCCESS) {
-                    System.out.printf("Successful transaction proposal response Txid: %s from peer %s \n", response.getTransactionID(), response.getPeer().getName());
+//                    System.out.printf("Successful transaction proposal response Txid: %s from peer %s \n", response.getTransactionID(), response.getPeer().getName());
                     successful.add(response);
                 } else {
                     failed.add(response);
                 }
             }
 
-            System.out.printf("Received %d transaction proposal responses. Successful+verified: %d . Failed: %d \n",
-                    proposalResponses.size(), successful.size(), failed.size());
+//            System.out.printf("Received %d transaction proposal responses. Successful+verified: %d . Failed: %d \n",
+//                    proposalResponses.size(), successful.size(), failed.size());
             if (failed.size() > 0) {
                 ProposalResponse firstTransactionProposalResponse = failed.iterator().next();
                 return ("Not enough endorsers for invoke:" + failed.size() + " endorser error: " +
                         firstTransactionProposalResponse.getMessage() +
                         ". Was verified: " + firstTransactionProposalResponse.isVerified());
             }
+//            judgeEndosermentTime = System.currentTimeMillis();
 
             // 向排序节点发送背书后的交易提案，成功后返回一个区块事件
             CompletableFuture<BlockEvent.TransactionEvent> completableFuture = channel.sendTransaction(proposalResponses);
-            System.out.println(completableFuture);
+//            ordererTime = System.currentTimeMillis();
+//            System.out.println(completableFuture);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -134,6 +144,10 @@ class SmTransactionImp implements SmTransaction {
         if (proposalResponses == null) {
             return "No Response";
         }
+//        System.out.println("构造提案时间：" + (proposalTime - startTime) + "ms");    // 暂时忽略不计
+//        System.out.println("等待背书时间：" + (waitEndoserTime - proposalTime) + "ms");
+//        System.out.println("确认背书规则时间" + (judgeEndosermentTime - waitEndoserTime) + "ms"); // 暂时忽略不计
+//        System.out.println("等待排序时间：" + (ordererTime - judgeEndosermentTime) + "ms");
 
         // 获取返回结果
         StringBuilder stringBuilder = new StringBuilder();

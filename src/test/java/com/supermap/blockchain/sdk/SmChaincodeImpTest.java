@@ -17,9 +17,9 @@ import static com.supermap.blockchain.sdk.Utils.getHexString;
 
 public class SmChaincodeImpTest {
     private static final String channelName = "txchannel";
-    private final String networkConfigFile = this.getClass().getResource("/network-config-testC.yaml").getFile();
+    private final String networkConfigFile = this.getClass().getResource("/network-config-testB.yaml").getFile();
     private final SmChain smChain = SmChain.getChain(channelName, new File(networkConfigFile));
-    private static final String chaincodeName = "testCommon";
+    private static final String chaincodeName = "endorsercc";
     private static final String chaincodeVersion = "1.0";
     private static final String chaincodePath = "/home/cy/Documents/ATL/SuperMap/ATLab-Chaincodes/java/Common";
     private final String chaincodeEndorsementPolicyFile = this.getClass().getResource("/chaincode-endorsement-policy.yaml").getFile();
@@ -68,13 +68,13 @@ public class SmChaincodeImpTest {
         Peer peer = channel.getPeers().iterator().next();
         List<Query.ChaincodeInfo> list = smChain.getChaincode().listInstalled(peer);
         for (Query.ChaincodeInfo info : list) {
-            if (chaincodeName.equals(info.getName())) {
+//            if (chaincodeName.equals(info.getName())) {
                 System.out.println(info);
                 System.out.println("name: " + info.getName());
                 System.out.println("version: " + info.getVersion());
                 System.out.println("id: " + getHexString(info.getId().toByteArray()));
                 System.out.println();
-            }
+//            }
         }
         Assert.assertTrue(list.size() > 0);
     }
@@ -85,10 +85,10 @@ public class SmChaincodeImpTest {
         Peer peer = channel.getPeers().iterator().next();
         List<Query.ChaincodeInfo> list = smChain.getChaincode().listInstantiated(peer);
         for (Query.ChaincodeInfo info : list) {
-            if (chaincodeName.equals(info.getName())) {
+//            if (chaincodeName.equals(info.getName())) {
                 System.out.println("name: " + info.getName());
                 System.out.println("version: " + info.getVersion());
-            }
+//            }
         }
         Assert.assertTrue(list.size() > 0);
     }

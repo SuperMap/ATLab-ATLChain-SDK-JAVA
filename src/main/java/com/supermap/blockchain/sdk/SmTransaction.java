@@ -17,7 +17,7 @@ public interface SmTransaction {
      * @param args 方法参数
      * @return 查询结果字符串
      */
-    String queryByString(String chaincodeName, String functionName, String[] args);
+    String queryByString(String chaincodeName, String functionName, String[] args) throws Exception;
 
     /**
      * 以字节方式查询交易，该操作不会改变链上数据

@@ -118,7 +118,7 @@ organizations:
     # this way. The SDK should allow applications to set the org admin identity via APIs, and only use
     # this route as an alternative when it exists.
     adminPrivateKey:
-      path: /home/cy/Documents/Practice/ATLab-ATLChain/ATLChain_NETWORK/crypto-config/peerOrganizations/orgc.example.com/users/Admin@orgc.example.com/msp/keystore/3a62f14ad67b2c58dfd97fcbd370ab88cd5dae2ef241b02057a09fd32c91149c_sk
+      path: /home/cy/Documents/Practice/ATLab-ATLChain/ATLChain_NETWORK/crypto-config/peerOrganizations/orgc.example.com/users/Admin@orgc.example.com/msp/keystore/4e5ddbe2d7380fb2a45aeded1ee55c72e2dda818158061a421aa992fa8475a68_sk
 
     signedCert:
       path: /home/cy/Documents/Practice/ATLab-ATLChain/ATLChain_NETWORK/crypto-config/peerOrganizations/orgc.example.com/users/Admin@orgc.example.com/msp/signcerts/Admin@orgc.example.com-cert.pem
