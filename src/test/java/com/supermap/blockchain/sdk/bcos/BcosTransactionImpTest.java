@@ -2,13 +2,11 @@ package com.supermap.blockchain.sdk.bcos;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
-public class TransactionImpTest {
+public class BcosTransactionImpTest {
 
     @Test
     public void queryByString() throws Exception {
-        TransactionImp transactionImp = new TransactionImp();
+        BcosTransactionImp transactionImp = new BcosTransactionImp();
         transactionImp.queryByString("", "", null);
     }
 }

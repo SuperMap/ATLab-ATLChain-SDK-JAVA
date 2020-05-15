@@ -1,0 +1,8 @@
+{
+  "index":{
+    "fields":["hashIndex"]
+  },
+  "ddoc":"test",
+  "name":"bcgisIndextest",
+  "type":"json"
+}

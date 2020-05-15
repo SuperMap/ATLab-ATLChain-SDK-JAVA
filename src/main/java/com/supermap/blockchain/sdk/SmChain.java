@@ -37,6 +37,10 @@ public class SmChain {
         return channel;
     }
 
+    HFClient getHfClient() {
+        return hfClient;
+    }
+
     public static SmChain getChain(String channelName, File networkConfigFile) {
         return new SmChain(channelName, networkConfigFile);
     }

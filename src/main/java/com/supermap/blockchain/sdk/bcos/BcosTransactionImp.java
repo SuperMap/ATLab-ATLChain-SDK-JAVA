@@ -12,7 +12,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.math.BigInteger;
 
-public class TransactionImp implements SmTransaction {
+// BCOS 交易相关类
+public class BcosTransactionImp implements SmTransaction {
 
     @Override
     public String queryByString(String chaincodeName, String functionName, String[] args) throws Exception {
