@@ -6,11 +6,14 @@ import org.fisco.bcos.web3j.crypto.Credentials;
 import org.fisco.bcos.web3j.crypto.gm.GenCredential;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.channel.ChannelEthereumService;
+import org.fisco.bcos.web3j.protocol.core.methods.response.Log;
+import org.fisco.bcos.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.fisco.bcos.web3j.tx.gas.StaticGasProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.math.BigInteger;
+import java.util.List;
 
 // BCOS 交易相关类
 public class BcosTransactionImp implements SmTransaction {
@@ -38,10 +41,12 @@ public class BcosTransactionImp implements SmTransaction {
         //根据合约地址加载合约
         HelloWorld contract = HelloWorld.load("0xfc6c71ac1cfa6c1650f2f696ff12a666683b4a13", web3j, credentials, new StaticGasProvider(gasPrice, gasLimit));
         //调用合约方法发送交易
-//        TransactionReceipt transactionReceipt = contract.set("HAHA").send();
+        TransactionReceipt transactionReceipt = contract.set("HAHA").send();
+        List<Log> logs = transactionReceipt.getLogs();
+
         //查询合约方法查询该合约的数据状态
-        String result = contract.get().send();
-        System.out.println(result);
+//        String result = contract.get().send();
+//        System.out.println(result);
         return null;
     }
 
