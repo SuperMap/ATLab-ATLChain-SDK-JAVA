@@ -35,7 +35,7 @@ public interface SmTransaction {
      * @param args 方法参数
      * @return 执行结果字符串
      */
-    String invokeByString(String chaincodeName, String functionName, String[] args);
+    String invokeByString(String chaincodeName, String functionName, String[] args) throws Exception;
 
     /**
      * 以字节方式执行交易，该操作会向链上写入数据
